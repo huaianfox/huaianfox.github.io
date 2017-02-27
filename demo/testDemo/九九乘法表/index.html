@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>九九乘法(面向对象练习）</title>
+    <style>
+        span{
+            display: inline-block;
+            width: 60px;
+            height: 25px;
+            line-height: 25px;
+            font-size: 12px;
+            text-align: center;
+            border: 1px solid #666;
+            margin: 1px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    (function () {
+        function box() {
+            var table =document.createElement("div");
+            table.style.cssText ="width:600px;margin:20px auto;font-size:0;";
+            table.id="table";
+            document.body.appendChild(table);
+        }
+        box();
+
+        function Tables(tab) {
+            this.tab =document.getElementById(tab);
+            this.init();
+        }
+        Tables.prototype ={
+            init:function () {
+                this.index=0;
+                this.html =this.createHtml();
+                this.cloneHtml =this.html.slice(0);
+                this.len =this.html.length;
+                this.timer =null;
+                this.createTable();
+            },
+            createHtml:function () {
+                var html=[];
+                for(var i =1;i<=9;i++){
+                    for(var j=1;j<=i;j++){
+                        html.push("<span>"+i+"*"+j+"="+i*j+"</span>")
+                    }
+                    html.push("<br/>")
+                }
+                return html;
+
+            },
+            createTable:function () {
+                var _this =this;
+                this.timer =setInterval(function () {
+                    if(_this.index<_this.len){
+                        _this.tab.innerHTML +=_this.html[_this.index++];
+                    }else{
+                        _this.html.splice(_this.html.length-1,1);
+                        _this.tab.innerHTML =_this.html.join("");
+                    }
+                    if(!_this.html.length){
+                        _this.tab.innerHTML =_this.cloneHtml.join("");
+                        clearInterval(_this.timer);
+                    }
+                },150)
+            }
+        };
+        new Tables("table");
+    })();
+</script>
+</body>
+</html>

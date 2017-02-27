@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播</title>
+    <link rel="stylesheet" href="../../../css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div id="wrap">
+        <div class="slide" role="listbox">
+            <div class="tab-img current">
+                <a href="#">
+                    <img src="images/01.jpg" alt="明贼">
+                </a>
+            </div>
+            <div class="tab-img">
+                <a href="#">
+                    <img src="images/02.jpg" alt="锦绣大明">
+                </a>
+            </div>
+            <div class="tab-img">
+                <a href="#">
+                    <img src="images/03.jpg" alt="锦衣春秋">
+                </a>
+            </div>
+            <div class="tab-img">
+                <a href="#">
+                    <img src="images/04.jpg" alt="大明1617">
+                </a>
+            </div>
+            <div class="tab-img">
+                <a href="#">
+                    <img src="images/05.jpg" alt="大明1630">
+                </a>
+            </div>
+        </div>
+        <div class="info">
+            <div class="tab-list current">
+                <div class="tab-title">
+                    <a href="#" title="明贼">
+                        明贼
+                        <span title="纸花船">作者:纸花船</span>
+                    </a>
+                </div>
+                <div class="tab-text">
+                    <p>大明天启元年四月，毛帅奇袭镇江的路上，多了一名新兵。蝴蝶悄悄扇动翅膀，大明战力最强悍的东江军，悄悄偏移了方向…</p>
+                    <p class="r">
+                        <a href="#">【阅读】</a>
+                        <a href="#">【收藏】</a>
+                    </p>
+                </div>
+            </div>
+            <div class="tab-list">
+                <div class="tab-title">
+                    <a href="#" title="锦绣大明">
+                        锦绣大明
+                        <span title="纸花船">作者:路人家</span>
+                    </a>
+                </div>
+                <div class="tab-text">
+                    <p>锦者，锦衣卫；绣者，绣春刀；且看穿越五百年来到大明万历初年的杨震如何走上巅峰，重振河山！</p>
+                    <p class="r">
+                        <a href="#">【阅读】</a>
+                        <a href="#">【收藏】</a>
+                    </p>
+                </div>
+            </div>
+            <div class="tab-list">
+                <div class="tab-title">
+                    <a href="#" title="锦衣春秋">
+                        锦衣春秋
+                        <span title="纸花船">作者：路人家</span>
+                    </a>
+                </div>
+                <div class="tab-text">
+                    <p>安忍不动如大地，静虑深密如秘藏！以天地为棋盘，众生为弈子，英雄豪杰，风月美人，演一出旷世棋局！</p>
+                    <p class="r">
+                        <a href="#">【阅读】</a>
+                        <a href="#">【收藏】</a>
+                    </p>
+                </div>
+            </div>
+            <div class="tab-list">
+                <div class="tab-title">
+                    <a href="#" title="大明1617">
+                        大明1617
+                        <span title="纸花船">作者：淡墨青衫</span>
+                    </a>
+                </div>
+                <div class="tab-text">
+                    <p>现代大亨回到明末山西成为富可敌国的晋商领袖！他掌握人心，成立商团，驱使士兵，获得无上权力来改变国运！</p>
+                    <p class="r">
+                        <a href="#">【阅读】</a>
+                        <a href="#">【收藏】</a>
+                    </p>
+                </div>
+            </div>
+            <div class="tab-list">
+                <div class="tab-title">
+                    <a href="#" title="大明1630">
+                        大明1630
+                        <span title="纸花船">作者：奶瓶战斗机</span>
+                    </a>
+                </div>
+                <div class="tab-text">
+                    <p>雪白的风帆像天空中的白云，高大的舰体如浮动的城堡，一排排的巨炮，喷吐着火焰和死亡，给世界带去进步和恐惧！</p>
+                    <p>
+                        <a href="#">【阅读】</a>
+                        <a href="#">【收藏】</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function(){
+            var $=function(name,parent){
+                if(typeof name=="string"){
+                    if(name.indexOf("#")>=0){
+                        name =name.replace("#","");
+                        return (parent||document).getElementById(name);
+                    }else if(name.indexOf(".")>=0){
+                        name =name.replace(".","");
+                        if(document.getElementsByClassName){
+                            return (parent||document).getElementsByClassName(name);
+                        }else{
+                            var items =(parent||document).getElementsByTagName("*");
+                            var len =items.length;
+                            var result=[];
+                            var reg=new RegExp("(\\s+|^)"+name+"(\\s+|$)");
+                            for(var i=0;i<len;i++){
+                                if(reg.test(items[i].className)){
+                                    result.push(items[i]);
+                                }
+                            }
+                            return result;
+                        }
+                    }
+                }else{
+                    alert("请输入有效字符串")
+                }
+            };
+            var wrap =$("#wrap"),
+                imgs =$(".tab-img",document),
+                info =$(".info",document),
+                counts = $(".tab-list",document),
+                index=0,
+                len =counts.length,
+                timer=null;
+            function auto() {
+                    index++;
+                    (index>=len)&&(index=0);
+                    play(index);
+            }
+            for(var i=0;i<counts.length;i++){
+                counts[i].name = i;
+                counts[i].onmouseover= function () {
+                    clearInterval(timer);
+                    play(this.name);
+                }
+            }
+            timer = setInterval(auto, 3000);
+            function play(cur){
+                for (var i = 0; i < counts.length; i++) {
+                    remove(counts[i], "current");
+                    remove(imgs[i], "current");
+                    fade(imgs[i],25);
+                }
+                addClass(counts[cur], "current");
+                addClass(imgs[cur], "current");
+                fade(imgs[cur],100);
+                index = cur;
+            }
+            wrap.onmouseover=function () {
+                clearInterval(timer);
+            };
+            wrap.onmouseout = function () {
+                timer =setInterval(auto,3000)
+            };
+            function fade(obj,target) {
+               obj.timer&&setInterval(obj.timer);
+                obj.timer = setInterval(function(){
+                    var cur = (parseInt(obj.style.opacity))*100;
+                    var speed = (target-cur)/8;
+                    speed =speed>0?Math.ceil(speed):Math.floor(speed);
+                    cur +=speed;
+                    obj.style.opacity = cur/100;
+                    if(cur ==target){
+                        clearInterval(obj.timer);
+                        obj.timer =null;
+                    }
+                },30)
+            }
+
+            function hasClass(obj, cls) {
+                var reg =new RegExp('(\\s+|^)' + cls + '(\\s+|$)');
+                return reg.test(obj.className);
+            }
+
+            function addClass(obj, cls) {
+                if (!hasClass(obj, cls)) {
+                    obj.className += ' ' + cls;
+                }
+            }
+
+            function remove(obj, cls) {
+                var reg = new RegExp('(\\s+|^)' + cls + '(\\s+|$)');
+                if (hasClass(obj, cls)) {
+                    obj.className = obj.className.replace(reg, '');
+                }
+            }
+        };
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

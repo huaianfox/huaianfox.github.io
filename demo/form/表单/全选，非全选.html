@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全选非全选</title>
+    <style>
+        *{margin:0;padding:0;}
+        form{
+            width: 70px;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+<form action="#">
+    <p><input type="checkbox" value="全选" id="all"><label for="all">全选</label></p>
+    <p><input type="checkbox" vlue="选项一"><label for="all">选项一</label></p>
+    <p><input type="checkbox" vlue="选项二"><label for="all">选项二</label></p>
+    <p><input type="checkbox" vlue="选项三"><label for="all">选项三</label></p>
+    <p><input type="checkbox" vlue="选项四"><label for="all">选项四</label></p>
+    <p><input type="checkbox" vlue="选项五"><label for="all">选项五</label></p>
+    <p><input type="checkbox" vlue="选项六"><label for="all">选项六</label></p>
+</form>
+<script>
+    (function () {
+        var form =document.forms[0];
+        var len =form.elements.length;
+        var all =form.elements[0];
+        all.onclick =function () {
+            var sel =this.checked;
+            for(var i=0;i<len;i++){
+                form.elements[i].checked =sel;
+            }
+        };
+        Array.prototype.forEach.call(form.elements,function (item) {
+            var b =true;
+            if(item.checked ==false){
+                b=false;
+            }
+            all.checked =b;
+        })
+
+    })();
+</script>
+
+
+
+</body>
+</html>

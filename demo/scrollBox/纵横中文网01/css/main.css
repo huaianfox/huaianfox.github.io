@@ -1,0 +1,68 @@
+#main{
+    margin: 100px auto;
+    width: 290px;
+    overflow: hidden;
+}
+#pic{
+    width: 240px;
+    height: 320px;
+    overflow: hidden;
+    float: left;
+    position: relative;
+}
+#pic a{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+#pic a:first-child{
+    z-index: 10;
+    opacity: 1;
+}
+#pic img{
+    vertical-align: middle;
+    width: 240px;
+    height: 320px;
+}
+
+#tab{
+    width: 42px;
+    height: 320px;
+    float: left;
+    margin-left: 8px;
+}
+#tab a{
+    display: block;
+    float: left;
+    opacity: 0.5;
+}
+#tab img{
+    width: 44px;
+    height: 60px;
+    margin-bottom: 4px;
+    vertical-align: middle;
+}
+#tab .on,#tab img:hover{
+    opacity: 1;
+}
+.text{
+    clear: both;
+}
+.text h2{
+    text-align: center;
+}
+.text a:hover{
+    text-decoration: underline;
+}
+#title{
+    text-align: center;
+    color: #526584;
+    line-height: 24px;
+}
+#info{
+    text-indent: 2em;
+    color: #333;
+    line-height: 20px;
+}

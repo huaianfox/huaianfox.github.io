@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>东东下来菜单</title>
+</head>
+<body>
+    <p>
+        <input type="text" id="txt"><a id="add" href="javascript:;">添加</a>
+    </p>
+    <select name="" id="singer">
+        <option value="">刀郎</option>
+        <option value="">李健</option>
+        <option value="">陈奕迅</option>
+        <option value="">周杰伦</option>
+    </select>
+    <p><a id="del" href="javascript:;">删除</a></p>
+    <script>
+        (function () {
+            var input =$("txt"),
+                add =$("add"),
+                singer =$("singer"),
+                del =$("del");
+            add.onclick =function () {
+                var val =check(txt);
+                if(val){
+                    singer.options.add(new Option(val,val));
+                }
+            };
+            del.onclick =function () {
+                var i =singer.selectedIndex;
+                singer.options.remove(i);
+            };
+            function check(obj) {
+                if(obj.value.length==0){
+                    alert("不能为空");
+                    return false;
+                }
+                return obj.value;
+            }
+
+
+           function $(id) {
+               return document.getElementById(id);
+           }
+        })()
+    </script>
+</body>
+</html>

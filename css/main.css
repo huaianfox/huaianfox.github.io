@@ -1,0 +1,46 @@
+body{
+    font: 12px/1.125 Microsoft YaHei;
+    color: #fff;
+}
+.wrap{
+    width: 600px;
+    margin: 60px auto 0;
+    font-size: 22px;
+    padding: 20px 30px;
+    border: 2px solid #dedede;
+    border-radius: 20px;
+    background: #9C0;
+}
+#nav{
+    font-size: 24px;
+    padding: 0 40px;
+}
+#nav>li{
+    line-height: 50px;
+    border-bottom: 1px solid #e9eaea;
+}
+#nav>li h2{
+    cursor: pointer;
+    padding: 10px 0;
+}
+#nav>li h2:hover{
+    background: rgba(0,0,0,.3);
+    padding: 10px 0 10px 20px;
+    border-radius: 6px;
+}
+#nav a{
+    display: block;
+    line-height: 60px;
+    padding: 0 30px;
+}
+#nav li a:hover{
+    background: #6f9400;
+    border-radius: 5px;
+    padding-left: 50px;
+}
+.sub-nav{
+    display: none;
+}
+.sub-nav li{
+    padding: 0 30px;
+}

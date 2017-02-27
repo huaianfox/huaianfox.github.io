@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>360商城</title>
+    <link rel="stylesheet" href="../../../css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div id="nav">
+    <ul class="navbar clearfix">
+        <li class="first"><a href="#">全部只能酷品</a></li>
+        <li><a href="#">手机</a></li>
+        <li><a href="#">行车记录仪</a></li>
+        <li><a href="#">儿童手表</a></li>
+        <li><a href="#">摄像机</a></li>
+        <li><a href="#">路由器</a></li>
+        <li><a href="#">儿童机器人</a></li>
+        <li><a href="#">老人手表</a></li>
+        <li><a href="#">儿童机器人</a></li>
+        <li><a href="#">智品牌</a></li>
+        <li><a href="#" >社区</a></li>
+    </ul>
+    <div class="sub-box">
+        <ul></ul>
+    </div>
+    </div>
+    <div class="main">
+        <div id="banner">
+            <div class="sildebox" role="listbox">
+                <ul>
+                    <li class="cur">
+                        <a href="#" target="_blank" class="pic-1"></a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" class="pic-2"></a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" class="pic-3"></a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" class="pic-4"></a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" class="pic-5"></a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank" class="pic-6"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="list-point">
+                <a href="#" class="cur">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">6</a>
+            </div>
+        </div>
+        <div class="category">
+            <ul>
+                <li class="sub-item">
+                    <a href="#" class="category-1">手机</a>
+                    <div class="sub-cate">
+                        <dl>
+                            <dt>360&nbsp;&nbsp;手机</dt>
+                        </dl>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="topside"></div>
+    </div>
+    <script>
+        (function () {
+            var $={
+                byId:function (obj,parent) {
+                    return (parent||document).getElementById(obj);
+                },
+                byTag:function (obj,parent) {
+                    return (parent||document).getElementsByTagName(obj);
+                },
+                byClass:function (obj,parent) {
+                    if(document.getElementsByClassName){
+                        return (parent || document).getElementsByClassName(obj);
+                    }else{
+                        var eles =(parent || document).getElementsByTagName("*"),
+                            result =[],
+                            reg =new RegExp("(\\s+|^)"+obj+"(\\s+|$)");
+                        var len =eles.length;
+                        for(var i=0;i<len;i++){
+                            if(reg.test(eles[i])){
+                                result.push(eles[i]);
+                            }
+                        }
+                        return result;
+                    }
+                },
+                getStyle:function (obj,attr) {
+                    if(obj.currentStyle){
+                        return obj.currentStyle[attr];
+                    }else{
+                        return getComputedStyle(obj,null)[attr];
+                    }
+                }
+            };
+            var banner =$.byId("banner"),
+                sildebox =$.byClass("sildebox")[0],
+                pot=$.byClass("list-point")[0];
+            var pic =$.byTag("li",sildebox),
+                points =$.byTag("a",pot);
+            var len =points.length,
+                num=0,
+                timer=null;
+            function autoPlay() {
+                num++;
+                (num>=len)&&(num=0);
+                show(num);
+            }
+            timer =setInterval(autoPlay,3000);
+            function show(current) {
+                for(var i=0;i<len;i++){
+                    pic[i].style.display="none";
+                    points[i].className ="";
+                    move(pic[i],20)
+                }
+                pic[current].style.display ="block";
+                points[current].className ="cur";
+                move(pic[current],100);
+                num =current;
+            }
+            function move(obj,target) {
+                clearInterval(obj.timer);
+                obj.timer =setInterval(function () {
+                    var cur =parseInt(parseFloat($.getStyle(obj,"opacity")*100));
+                    var speed =(target -cur)/7;
+                    speed =speed>0?Math.ceil(speed):Math.floor(speed);
+                    cur +=speed;
+                    obj.style.opacity =cur/100;
+                    if(cur ==target){
+                        clearInterval(obj.timer);
+                        obj.timer=null;
+                    }
+                },20)
+            }
+            banner.onmouseover =function () {
+                clearInterval(timer);
+            };
+            banner.onmouseout =function () {
+                timer =setInterval(autoPlay,3000);
+            };
+
+            for(var i=0;i<len;i++){
+                points[i].index =i;
+                points[i].onclick=function () {
+                    show(this.index);
+                }
+            }
+            var category =$.byClass("category")[0];
+            console.log(category.offsetLeft);
+        })()
+    </script>
+</body>
+</html>

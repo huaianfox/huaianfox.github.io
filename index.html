@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>目录</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+</head>
+<body>
+    <div class="wrap">
+        <ul id="nav">
+            <li>
+                <h2>表单美化及相关</h2>
+                <ul class="sub-nav">
+                    <li><a href="../huaianfox.github.io/demo/form/仿select控件/仿select控件.html" target="_blank">仿select控件(面向对象练习)</a></li>
+                    <li><a href="../huaianfox.github.io/demo/form/表单/注册表单验证.html" target="_blank">注册表单验证(面向对象练习)</a></li>
+                    <li><a href="../huaianfox.github.io/demo/form/表单/表单自动切换焦点.html" target="_blank">表单自动切换焦点</a></li>
+                </ul>
+            </li>
+            <li>
+                <h2>文字内容及相关</h2>
+                <ul class="sub-nav">
+                    <li><a href="../huaianfox.github.io/demo/word/编辑修改文章/鼠标悬停提示.html" target="_blank">鼠标悬停提示</a></li>
+                    <li><a href="../huaianfox.github.io/demo/word/自定义右键/自定义右键修改版.html" target="_blank">自定义右键菜单改变图片大小</a></li>
+                </ul>
+            </li>
+            <li>
+                <h2>图片轮换及相关</h2>
+                <ul class="sub-nav">
+                    <li><a href="../huaianfox.github.io/demo/scrollBox/纵横中文网01/index.html" target="_blank">纵横中文网01缩略图</a></li>
+                    <li><a href="../huaianfox.github.io/demo/scrollBox/纵横中文网02/index.html" target="_blank">纵横中文网02</a></li>
+                    <li><a href="../huaianfox.github.io/demo/scrollBox/QQ音乐旋转图片/index.html" target="_blank">QQ音乐旋转轮播</a></li>
+                    <li><a href="../huaianfox.github.io/demo/scrollBox/轮播-面向对象练习/index.html" target="_blank">轮播-面向对象练习</a></li>
+                </ul>
+            </li>
+            <li>
+                <h2>日常练习相关</h2>
+                <ul class="sub-nav">
+                    <li><a href="../huaianfox.github.io/demo/testDemo/九九乘法表/index.html" target="_blank">九九乘法表(面向对象练习）</a></li>
+                    <li><a href="../huaianfox.github.io/demo/testDemo/放大镜/index.html" target="_blank">放大镜效果</a></li>
+                    <li><a href="../huaianfox.github.io/demo/testDemo/腾讯电脑管家导航栏/index.html" target="_blank">腾讯电脑管家伸缩导航栏</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <script>
+        (function () {
+            var $={
+                byId:function (name) {
+                    return document.getElementById(name)
+                },
+                byTag:function (name,parent) {
+                    return (parent||document).getElementsByTagName(name);
+                },
+                byClass:function (name,parent) {
+                    if(document.getElementsByClassName){
+                        return (parent|| document).getElementsByClassName(name);
+                    }else{
+                        var eles =$.byTag(name,parent);
+                        var result=[],
+                            len =eles.length,
+                            reg=new RegExp("(\\s+|^)"+name+"(\\s+$)");
+                        for(var i=0;i<len;i++){
+                            if(reg.test(eles[i])){
+                                result.push(eles[i]);
+                            }
+                        }
+                        return result;
+                    }
+                }
+            };
+            var oU =$.byId("nav");
+            var oH=$.byTag("h2",oU);
+            var sub =$.byClass("sub-nav",oU);
+            var num =-1;
+            var open=false;
+            for(var i=0,len=oH.length;i<len;i++){
+                oH[i].index=i;
+                oH[i].onclick=function (e) {
+                    e=e||window.event;
+                    console.log(e.currentTarget);
+                    for(var i=0;i<sub.length;i++){
+                        sub[i].style.display ="none";
+                    }
+                    if(num ==this.index && open ){
+                        sub[this.index].style.display= "none";
+                        open=false;
+                    }else{
+                        sub[this.index].style.display= "block";
+                        open=true;
+                    }
+                    num =this.index;
+                }
+            }
+        })()
+    </script>
+</body>
+</html>

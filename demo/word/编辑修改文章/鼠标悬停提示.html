@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>鼠标悬停提示</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            position: relative;
+        }
+        #news{
+            width: 300px;
+            float: right;
+            margin: 50px 100px 0 0;
+            position: relative;
+            border: 2px solid #363636;
+            border-radius: 10px;
+            box-shadow: 5px 5px 5px #ccc,0 5px 7px #eee;
+            overflow: hidden;
+        }
+        #news li{
+            width: 280px;
+            padding:0 15px;
+            height: 40px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+            list-style: decimal inside;
+        }
+        #news li a{
+            line-height: 40px;
+            padding: 10px 0;
+            text-decoration: none;
+            color: #333;
+         }
+        #news li a:hover{
+            text-decoration: underline;
+            color:  #ff8500;
+        }
+        .tips{
+            position: absolute;
+            top:0;
+            left: 0;
+            padding: 8px 15px;
+            line-height: 20px;
+            font-size: 14px;
+            background: #333;
+            opacity: 0.8;
+            filter: alpha(opacity=80);
+            color: #fff;
+            display: none;
+            border-radius: 6px;
+        }
+        .tips:before{
+            content: '';
+            display: block;
+            position: absolute;
+            top: -11px;
+            left: 28%;
+            width: 0;
+            height: 0;
+            border: 6px solid;
+            border-color: transparent transparent #666 transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="news">
+        <ol>
+            <li><a href="#">中国十三五续建新建机场74个 未来去这些城市可坐飞机</a></li>
+            <li><a href="#">中国迎H7N9疫情高发季节 多地活禽市场陆续关闭</a></li>
+            <li><a href="#">蔡英文拟花7000亿救经济 国民党官员批其发神经</a></li>
+            <li><a href="#">这场超高规格培训 省委书记省长只能坐后排</a></li>
+            <li><a href="#">日殖民者杀60万台湾人 议员质疑民进党为何亲日</a></li>
+            <li><a href="#">怼媒体骂前任：川普上任后首场个人记者会太“精彩”</a></li>
+            <li><a href="#"> 歼11D航电系统升级已接近歼20 采用部分隐身技术</a></li>
+            <li><a href="#"> 男子在ATM机上查余额 隔壁机器吐9300元现金</a></li>
+        </ol>
+    </div>
+    <script>
+        (function () {
+            var news =document.getElementById("news");
+            var list =news.getElementsByTagName("a");
+            var len=list.length;
+            var txt=[];
+            var tips =create("div");
+            tips.className="tips";
+            for(var i=0;i<len;i++){
+                txt[i] =list[i].innerHTML;
+                list[i].index =i;
+                list[i].onmousemove =function (e) {
+                    e =e ||window.event;
+                    tips.innerHTML =txt[this.index];
+                    tips.style.display ="block";
+                    var cW =document.documentElement.clientWidth ||document.body.clientWidth;
+                    var oX =tips.offsetWidth;
+                    var pos =e.clientX;
+                    //超过折行处，tips的left值重新计算
+                    // 鼠标水平位移的距离值减去其与折行处水平位置的差值1.2倍，超出越多越往左移
+                    pos =cW-oX>=pos?pos:pos-1.2*(pos-(cW-oX));
+                    tips.style.left=pos-20+"px";
+                    tips.style.top =e.clientY+20+"px";
+                };
+                list[i].onmouseout =function () {
+                    tips.style.display="none";
+                };
+            }
+            function create(ele,parent) {
+                var oele=document.createElement(ele);
+                return (parent||document.body).appendChild(oele);
+            }
+            document.oncontextmenu =function () {
+                return false;
+            }
+        })()
+    </script>
+</body>
+</html>
