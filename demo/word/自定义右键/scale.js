@@ -104,17 +104,14 @@ window.onload =function(){
             return false;
         })
     }
-    //事件委托，根据menu的菜单项类名分别处理
     $.addHandler(menu,"click",function (e) {
         e =e||window.event;
         var target =$.getTarget(e);
         switch(target.className){
             case "default":
-                console.log(this);
                 setDefault(currentBox);
                 break;
             case "bigger":
-                console.log(currentBox);
                 setBigger(currentBox);
                 break;
             case "smaller":
