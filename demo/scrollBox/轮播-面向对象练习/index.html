@@ -83,13 +83,7 @@
                        _this.timer =setInterval(auto,3000);
                    };
                    this.next.onclick =function () {
-                       if(_this.now<_this.len - 1){
-                           _this.now++;
-                       }else{
-                           _this.now =len;
-                           _this.scrollBox.style.left= -(_this.offWidth * (_this.len-1)) +"px";
-                       }
-                       _this.play(_this.now);
+                       auto();
                    };
                    this.prev.onclick = function () {
                        if(_this.now>0){
@@ -110,7 +104,6 @@
                    }
 
                },
-
                play:function (cur) {
                    for(var i=0;i<this.len;i++){
                        this.tab[i].className ="";
