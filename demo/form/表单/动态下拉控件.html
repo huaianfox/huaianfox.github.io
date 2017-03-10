@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>东东下来菜单</title>
+    <title>下拉菜单</title>
 </head>
 <body>
     <p>
@@ -30,7 +30,11 @@
             };
             del.onclick =function () {
                 var i =singer.selectedIndex;
-                singer.options.remove(i);
+                if(singer.options[i]){
+                    singer.options.remove(i);
+                }else{
+                    alert("已经清空选项");
+                }
             };
             function check(obj) {
                 if(obj.value.length==0){
