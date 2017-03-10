@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>Title</title>
+    <style>
+        form,p{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<p>没有写相关样式</p>
+<p>最多选择三项</p>
+<form action="#">
+    <label for="foot">足球</label>
+    <input type="checkbox" name="足球" id="foot">
+    <label for="basketball">篮球</label>
+    <input type="checkbox" name="篮球" id="basketball">
+    <label for="swim">游泳</label>
+    <input type="checkbox" name="游泳" id="swim">
+    <label for="badminton">羽毛球</label>
+    <input type="checkbox" name="足球" id="badminton">
+</form>
+<script>
+    (function () {
+        var form =document.forms[0],count=0;
+        for(var i=0,len=form.elements.length;i<len;i++){
+            form.elements[i].onclick=function () {
+                this.checked?count++:count--;
+                if(count>3){
+                    count=3;
+                    return false;
+                }
+            }
+        }
+    })();
+</script>
+</body>
+</html>

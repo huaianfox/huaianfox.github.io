@@ -22,10 +22,11 @@
                 singer =$("singer"),
                 del =$("del");
             add.onclick =function () {
-                var val =check(txt);
-                if(val){
-                    singer.options.add(new Option(val,val));
+                var opt =check(input);
+                if(opt.value){
+                    singer.options.add(opt);
                 }
+                input.value="";
             };
             del.onclick =function () {
                 var i =singer.selectedIndex;
@@ -36,7 +37,9 @@
                     alert("不能为空");
                     return false;
                 }
-                return obj.value;
+                var opt =document.createElement("option");
+                opt.value= opt.text=obj.value;
+                return opt;
             }
 
 

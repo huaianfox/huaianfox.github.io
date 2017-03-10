@@ -84,6 +84,7 @@
                    };
                    this.next.onclick =function () {
                        auto();
+                       console.log(_this.now);
                    };
                    this.prev.onclick = function () {
                        if(_this.now>0){
@@ -104,6 +105,7 @@
                    }
 
                },
+
                play:function (cur) {
                    for(var i=0;i<this.len;i++){
                        this.tab[i].className ="";
