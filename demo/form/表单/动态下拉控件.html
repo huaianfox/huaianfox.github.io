@@ -37,11 +37,12 @@
                 }
             };
             function check(obj) {
+                var opt=null;
                 if(obj.value.length==0){
                     alert("不能为空");
                     return false;
                 }
-                var opt =document.createElement("option");
+                opt =document.createElement("option");
                 opt.value= opt.text=obj.value;
                 return opt;
             }

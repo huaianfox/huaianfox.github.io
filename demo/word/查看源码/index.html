@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>查看源码</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #wrap{
+            width: 1000px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <p><button id="btn">查看源码</button></p>
+    </div>
+    <script>
+        (function () {
+            function ViewSource(wrap) {
+             this.wrap=document.getElementById(wrap);
+             this.init();
+            }
+            ViewSource.prototype={
+                init:function () {
+                    this.btn=document.getElementById("btn");
+                },
+                createXHR:function () {
+                    if(window.XMLHttpRequest){
+                        return new XMLHttpRequest();
+                    }else{
+                        return new ActiveXObject()
+                    }
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
