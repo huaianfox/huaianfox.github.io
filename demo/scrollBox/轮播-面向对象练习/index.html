@@ -34,6 +34,11 @@
                     <img src="images/05.jpeg" alt="05">
                 </a>
            </li>
+           <li>
+               <a href="#">
+                   <img src="images/01.jpeg" alt="01">
+               </a>
+           </li>
        </ul>
        <div id="controls">
            <span class="on">1</span>
@@ -60,59 +65,77 @@
                  this.next =this.$(".next",this.wrap)[0];
                  this.offWidth =this.wrap.offsetWidth;
                  this.len =this.tab.length;
+                 this.interval=3000;
                  this.now =0;
+                 this.index=0;
                  this.timer =null;
                  this.initCur();
                },
                initCur:function () {
                    var _this = this;
 
-                   this.timer=setInterval(auto,3000);
-
-                   for(var i=0;i<this.len;i++){
-                       this.tab[i].index =i;
-                       this.tab[i].onmouseover=function () {
-                           _this.play(this.index);
-                       }
-                   }
+                   this.timer=setInterval(function () {
+                       _this.autoPlay();
+                   },_this.interval);
 
                    this.wrap.onmouseover =function () {
                        clearInterval(_this.timer);
                    };
                    this.wrap.onmouseout =function () {
-                       _this.timer =setInterval(auto,3000);
+                       _this.timer =setInterval( function () {
+                           _this.autoPlay();
+                       },_this.interval);
                    };
                    this.next.onclick =function () {
-                       auto();
-                       console.log(_this.now);
+                       _this.autoPlay();
                    };
                    this.prev.onclick = function () {
-                       if(_this.now>0){
-                           _this.now--;
-                       }else{
-                           _this.now =_this.len -1;
-                           _this.scrollBox.style.left= -(_this.offWidth * _this.len) +"px";
-
-                       }
-                       _this.play(_this.now);
+                       _this.autoPlay("left");
                    };
-
-                   function auto(){
-                       _this.now++;
-                       (_this.now==_this.len )&& (_this.now=0);
-                       _this.play(_this.now);
-
+                   for(var i=0;i<this.len;i++){
+                       this.tab[i].count =i;
+                       this.tab[i].onmouseover=function () {
+                           _this.play(this.count,this.count);
+                       }
                    }
-
                },
-
-               play:function (cur) {
+               autoPlay:function (dre) {
+                   console.log(this);
+                   var _this =this;
+                 switch (dre){
+                     case "left":
+                         this.index--;
+                         this.now--;
+                         if(this.index<0){
+                             this.index =this.len -1;
+                             this.slideBox.style =-(this.offWidth*this.len)+"px";
+                         }
+                         if(this.now<0){
+                             this.now=this.len-1;
+                         }
+                         break;
+                     default:
+                         this.index++;
+                         this.now++;
+                         if(this.index>this.len){
+                             this.index =1;
+                             this.slideBox.style =0;
+                         }
+                         if(this.now>this.len-1){
+                             this.now =0;
+                         }
+                         break;
+                 }
+                 this.play(this.now,this.index);
+               },
+               play:function (a,b) {
                    for(var i=0;i<this.len;i++){
                        this.tab[i].className ="";
                    }
-                   this.tab[cur].className +="on";
-                   this.move(this.slideBox,"left",-this.offWidth*cur);
-                   this.now =cur;
+                   this.tab[a].className +="on";
+                   this.move(this.slideBox,"left",-this.offWidth*b);
+                   this.now =a;
+                   this.index=b;
                },
                move:function (obj,attr,target) {
                    var _this =this;

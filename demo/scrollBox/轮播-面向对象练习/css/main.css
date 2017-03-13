@@ -10,7 +10,9 @@
 	position: absolute;
     top: 0;
     left: 0;
-    width: 3000px;
+    width: 4000px;
+	height: 400px;
+	overflow: hidden;
 }
 .slide li{
 	float: left;
