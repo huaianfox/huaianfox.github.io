@@ -328,6 +328,7 @@ header{
     font-size: 12px;
     border-top: 1px solid #999;
     padding: 35px 55px 0;
+    overflow: hidden;
 }
 .footer-info p{
     line-height: 24px;
