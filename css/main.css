@@ -44,3 +44,7 @@ body{
 .sub-nav li{
     padding: 0 30px;
 }
+
+.hide{
+    display: none;
+}
