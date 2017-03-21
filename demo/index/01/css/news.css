@@ -308,6 +308,7 @@ header{
     padding: 10px;
     background: #fff;
     z-index: 100;
+    box-shadow: 3px 1px 3px #ccc,-1px -1px 3px #999;
 }
 .close{
     position: absolute;
@@ -325,9 +326,9 @@ header{
 .tel-number{
     color: #990000;
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 500;
     padding-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-bottom: 1px dotted #888;
 }
 .online-service{

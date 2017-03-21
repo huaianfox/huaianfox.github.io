@@ -271,24 +271,23 @@ header{
 }
 .product{
     width: 100%;
-    padding: 10px 10px 30px;
     overflow: hidden;
 }
-.scroll{
-    width: 3000px;
+#scroll{
+    margin: 20px auto;
+    width: 1060px;
     height: 186px;
+    text-align: center;
     overflow: hidden;
+    position: relative;
 }
 .product-show{
-    width: 1500px;
-    height: 186px;
-    padding: 10px 0 0;
-    float: left;
-
+    width: 3000px;
+    overflow: hidden;
 }
 
 .pic-item{
-    width: 215px;
+    width: 210px;
     margin: 0 8px;
     font-size: 0;
     float: left;
@@ -300,8 +299,13 @@ header{
     border: 2px solid #444;
 }
 .pic-item a{
+    display: block;
     font-size: 12px;
-    color: #999;
+    line-height: 1.2;
+    color: #777;
+}
+.pic-item .tit{
+    padding: 10px 0;
 }
 .pic-item a:hover{
     text-decoration: underline;
@@ -355,6 +359,7 @@ header{
     padding: 10px;
     background: #fff;
     z-index: 100;
+    box-shadow: 3px 1px 3px #ccc,-1px -1px 3px #999;
 }
 .close{
     position: absolute;
@@ -372,9 +377,9 @@ header{
 .tel-number{
     color: #990000;
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 500;
     padding-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-bottom: 1px dotted #888;
 }
 .online-service{
