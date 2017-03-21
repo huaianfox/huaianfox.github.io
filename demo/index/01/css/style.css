@@ -117,10 +117,14 @@ header{
 #slide{
     position: relative;
 }
+#slide li:first-child{
+    display: block;
+}
 #slide li{
     position: absolute;
     left: 0;
     top: 0;
+    display: none;
 }
 
 .slideTab{
@@ -265,11 +269,17 @@ header{
     padding: 10px 10px 30px;
     overflow: hidden;
 }
+.scroll{
+    width: 3000px;
+    height: 186px;
+    overflow: hidden;
+}
 .product-show{
     width: 1500px;
     height: 186px;
     padding: 10px 0 0;
-    overflow: hidden;
+    float: left;
+
 }
 
 .pic-item{

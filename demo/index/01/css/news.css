@@ -68,7 +68,7 @@ header{
 .menu{
     height: 149px;
     line-height: 149px;
-    z-index: 99;
+    z-index: 999;
 }
 .menu>li{
     width: 103px;
@@ -79,17 +79,14 @@ header{
 }
 .menu li:hover{
     background: #000;
-    transition: all 0.5s;
+    transition: all 1s;
 }
 .menu li a{
     display: block;
     color: #fff;
 }
-.sub-menu{
+.on .sub-menu{
     display: none;
-}
-.menu li:hover>.sub-menu{
-    display: block;
 }
 .sub-menu li{
     height: 36px;
