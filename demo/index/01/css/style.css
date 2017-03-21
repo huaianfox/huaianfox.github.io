@@ -55,6 +55,10 @@ header{
     height: 149px;
     width: 100%;
 }
+.top{
+    position: relative;
+    z-index: 1;
+}
 .logo{
     width: 379px;
     height: 149px;
@@ -67,7 +71,6 @@ header{
 .menu{
     height: 149px;
     line-height: 149px;
-    z-index: 999;
 }
 .menu>li{
     width: 103px;
@@ -78,7 +81,7 @@ header{
 }
 .menu li:hover{
     background: #000;
-    transition: all 1s;
+    transition: all .5s;
 }
 .menu li a{
     display: block;
@@ -104,23 +107,22 @@ header{
 }
 
 .slidebox{
-    clear: both;
     height: 370px;
     width: 100%;
     background: #000;
     position: relative;
-    z-index: -99;
+    z-index: 0;
 }
 .slidebox img{
     width: 100%;
 }
-#slide{
+.slide{
     position: relative;
 }
-#slide li:first-child{
+.slide li:first-child{
     display: block;
 }
-#slide li{
+.slide li{
     position: absolute;
     left: 0;
     top: 0;
@@ -210,6 +212,9 @@ header{
 .title a{
     color: #666;
 }
+.pro .title a:hover{
+    color: #99CC00;
+}
 .title .fl{
     margin-left: 10px;
     font-size: 18px;
@@ -232,7 +237,7 @@ header{
 }
 .news{
     width: 210px;
-    height: 300px;
+    height: 360px;
     padding: 10px;
 }
 .news .new-list{
@@ -349,6 +354,7 @@ header{
     height: 192px;
     padding: 10px;
     background: #fff;
+    z-index: 100;
 }
 .close{
     position: absolute;

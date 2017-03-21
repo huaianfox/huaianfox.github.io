@@ -26,9 +26,9 @@ $(function () {
     }
 
     $(".on").hover(function () {
-        $(this).find(".sub-menu").slideDown(300);
+        $(this).find(".sub-menu").slideDown(500);
     },function () {
-        $(this).find(".sub-menu").slideUp(300);
+        $(this).find(".sub-menu").slideUp(500);
     });
 
     $(".close").on("click",function () {
