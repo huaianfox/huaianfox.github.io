@@ -109,10 +109,10 @@
                 config.url =addURLParam(config.url,option.valueType,option.value);
                 config.url =addURLParam(config.url,option.callType,cbName);
                 script.src=config.url;
-                if(config.url.indexOf("baidu.com")!==-1){
-                    console.log("999999999");
-                    script.src=script.src+"&"+(+new Date());
-                }
+                // if(config.url.indexOf("baidu.com")!==-1){
+                //     console.log("999999999");
+                //     script.src=script.src+"&"+(+new Date());
+                // }
                 console.log(script.src);
                 oHead.appendChild(script);
 
