@@ -100,7 +100,7 @@
             }else if(config.dataType.toLowerCase()==="jsonp"){//跨域
                 config.type="get";//强制get提交
                 if(!option.url){
-                    throw new Error("缺少数据");
+                    throw new Error("缺少数据，提交地址");
                 }
                 var cbName="myfunc",
                     doc=document,
@@ -109,10 +109,6 @@
                 config.url =addURLParam(config.url,option.valueType,option.value);
                 config.url =addURLParam(config.url,option.callType,cbName);
                 script.src=config.url;
-                // if(config.url.indexOf("baidu.com")!==-1){
-                //     console.log("999999999");
-                //     script.src=script.src+"&"+(+new Date());
-                // }
                 console.log(script.src);
                 oHead.appendChild(script);
 

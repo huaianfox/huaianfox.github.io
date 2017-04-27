@@ -121,7 +121,12 @@ body{
     background: #fff;
     display: none;
 }
+.suggest a{
+    color: inherit;
+    text-decoration: none;
+}
 .suggest .txt{
+    display: block;
     padding: 0 0 0 20px;
     height: 30px;
     line-height: 30px;
