@@ -11,32 +11,7 @@
     * @param timeout;
     *
     * */
-    // function Jsonp(opt) {
-    //     var doc=document,
-    //         timer=null;//超时器
-    //     if(!opt.url) return;
-    //     var oHead =doc.getElementsByTagName("head")[0],
-    //         script=doc.createElement("script");
-    //     script.src=opt.url+opt.dataType+opt.data+opt.callType+opt.callback;
-    //     oHead.appendChild(script);
-    //
-    //     timer=setTimeout(function () {
-    //         window[opt.callback]=null;
-    //         opt.fail&&opt.fail("亲超时了~~~~(>_<)~~~~");
-    //     },opt.timeout);
-    //
-    //     window[opt.callback]=function (response) {
-    //         clearTimeout(timer);
-    //         console.log(script);
-    //         if(script){
-    //             oHead.removeChild(script)
-    //         }else{
-    //             return
-    //         }
-    //         // script&&oHead.removeChild(script);
-    //         opt.success&&opt.success(response);
-    //     }
-    // }
+
 
     var xhr=null;
     var Ajax=function (option) {
@@ -134,7 +109,11 @@
                 config.url =addURLParam(config.url,option.valueType,option.value);
                 config.url =addURLParam(config.url,option.callType,cbName);
                 script.src=config.url;
-                console.log(config.url);
+                if(config.url.indexOf("baidu.com")!==-1){
+                    console.log("999999999");
+                    script.src=script.src+"&"+(+new Date());
+                }
+                console.log(script.src);
                 oHead.appendChild(script);
 
                 window[cbName]=function (response) {

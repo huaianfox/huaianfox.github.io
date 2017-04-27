@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 	<title>Title</title>
 	<link rel="stylesheet" href="css/style.css">
 	<script src="js/jsonp.js"></script>
@@ -21,8 +22,8 @@
 				淘宝
 			</div>
 		</div>
-		<form action="https://s.taobao.com/search" class="search-form"  id="search-form" method="get" accept-charset="utf-8"  target="_blank">
-			<input type="text" class="search-text" name="q" id="search_input" autocomplete="off" maxlength="50">
+		<form action="https://s.taobao.com/search" class="search-form"  id="search-form" method="get" accept-charset="utf-8"  target="_blank" >
+			<input type="text" class="search-text" name="q" id="search_input" autocomplete="off" maxlength="50" placeholder="请输入要输入要搜索内容">
 			<button type="submit" class="search-button"><i></i></button>
 		</form>
 	</div>
@@ -32,7 +33,7 @@
 		    "use strict";
 			var data=[
 					{name:"taobao",action:"https://s.taobao.com/search",url:"https://suggest.taobao.com/sug?code=utf-8",valueType:"q",callType:"callback",get:"result",timeout:18000,dataType:"jsonp"},
-					{name:"baidu",action:"https://www.baidu.com/s",url:"http://suggestion.baidu.com/su",valueType:"wd",callType:"cb",get:"s",timeout:18000,dataType:"jsonp"},
+					{name:"baidu",action:"http://www.baidu.com/s",url:"http://suggestion.baidu.com/su",valueType:"wd",callType:"cb",get:"s",timeout:18000,dataType:"jsonp"},
 					{name:"360",action:"https://www.so.com/s",url:"https://sug.so.360.cn/suggest?encodein=utf-8&encodeout=utf-8&format=json",valueType:"word",callType:"callback",get:"result",timeout:18000,dataType:"jsonp"},
 					{name:"bing",action:"https://cn.bing.com/search",url:"https://api.bing.com/qsonhs.aspx?type=cb",valueType:"q",callType:"cb",get:"AS",timeout:18000,dataType:"jsonp"}
 				],
@@ -71,6 +72,10 @@
 		            event =e||window.event,
 		            keyCode =event.keyCode,
 		            nodeList=null;//弹框信息列表
+
+//				if(json.name=="baidu"){
+//                    search_form.action=json.action+searchText;
+//				}
 
 				if(searchText==""||searchText==null){
                     return
