@@ -11,6 +11,13 @@
     <div class="wrap">
         <ul id="nav">
             <li>
+                <h2>个人小项目</h2>
+                <ul class="sub-nav">
+                    <li><a href="../huaianfox.github.io/demo/project/search/index.html" target="_blank">在线搜索</a></li>
+                    <li><a href="../huaianfox.github.io/demo/project/datepicker/index.html" target="_blank">日历组件</a></li>
+                </ul>
+            </li>
+            <li>
                 <h2>表单美化及相关</h2>
                 <ul class="sub-nav">
                     <li><a href="../huaianfox.github.io/demo/form/仿select控件/仿select控件.html" target="_blank">仿select控件(面向对象练习)</a></li>
@@ -64,52 +71,39 @@
     </div>
     <script>
         (function () {
-            var $={
-                byId:function (name) {
-                    return document.getElementById(name)
-                },
-                byTag:function (name,parent) {
-                    return (parent||document).getElementsByTagName(name);
-                },
-                byClass:function (name,parent) {
-                    if(document.getElementsByClassName){
-                        return (parent|| document).getElementsByClassName(name);
-                    }else{
-                        var eles =$.byTag(name,parent);
-                        var result=[],
-                            len =eles.length,
-                            reg=new RegExp("(\\s+|^)"+name+"(\\s+$)");
-                        for(var i=0;i<len;i++){
-                            if(reg.test(eles[i])){
-                                result.push(eles[i]);
-                            }
-                        }
-                        return result;
-                    }
+            var $=function (name,parent) {
+                var doc=parent||document;
+                if(name.substr(0,1)=="#"){
+                    return doc.getElementById(name.substr(1));
+                }else if(name.substr(0,1)=="."){
+                    return doc.getElementsByClassName(name.substr(1));
+                }else if(/^[a-zA-Z]+\d?$/g.test(name)){
+                    console.log(name);
+                    return doc.getElementsByTagName(name);
                 }
             };
-            var oU =$.byId("nav");
-            var oH=$.byTag("h2",oU);
-            var sub =$.byClass("sub-nav",oU);
-            var num =-1;
-            var open=false;
-            for(var i=0,len=oH.length;i<len;i++){
-                oH[i].index=i;
-                oH[i].onclick=function (e) {
-                    e=e||window.event;
-                    for(var i=0;i<sub.length;i++){
-                        sub[i].style.display ="none";
-                    }
-                    if(num ==this.index && open ){
-                        sub[this.index].style.display= "none";
+            var oU =$("#nav"),
+                oH=$("h2",oU),
+                sub =$(".sub-nav",oU),
+                num =-1,
+                open=false,
+                forEach=Array.prototype.forEach;
+
+            forEach.call(oH,function (item,index) {
+                item.onclick=function () {
+                    forEach.call(sub,function (item) {
+                        item.style.display="none"
+                    });
+                    if(num==index&&open){
+                        sub[index].style.display="none";
                         open=false;
                     }else{
-                        sub[this.index].style.display= "block";
+                        sub[index].style.display="block";
                         open=true;
                     }
-                    num =this.index;
+                    num=index;
                 }
-            }
+            });
         })()
     </script>
 </body>
