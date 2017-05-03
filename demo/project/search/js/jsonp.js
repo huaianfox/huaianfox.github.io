@@ -38,7 +38,6 @@
         },
         start:function (option) {
             var config=this.config;
-            xhr=new this.createXHR();
             if(option.url){
                 config.url=option.url;
             }else{
@@ -65,8 +64,9 @@
             if(option.fail){
                 config.success=option.success;
             }
-
-
+            if(config.dataType !="jsonp"){
+                xhr=new this.createXHR();
+            }
 
             if(config.dataType.toLowerCase()==="json"){//非跨域
                 for(var item in config.data){
@@ -102,19 +102,25 @@
                 if(!option.url){
                     throw new Error("缺少数据，提交地址");
                 }
-                var cbName="myfunc",
-                    doc=document,
-                    oHead=doc.getElementsByTagName("head")[0],
-                    script=doc.createElement("script");
+                var cbName="myfunc"+Math.random(),
+                    script=script=document.createElement("script");
+                cbName =cbName.replace(".","");
                 config.url =addURLParam(config.url,option.valueType,option.value);
                 config.url =addURLParam(config.url,option.callType,cbName);
+                console.log(cbName)
                 script.src=config.url;
                 console.log(script.src);
-                oHead.appendChild(script);
-
+                document.body.appendChild(script);
                 window[cbName]=function (response) {
-                    script&&oHead.removeChild(script);
+                    if(!response){
+                        return
+                    }
+                    script&&document.body.removeChild(script);
                     config.success&&config.success(response);
+                    window[cbName]=null;
+                    // setTimeout(function () {
+                    //     window[cbName]=null;
+                    // },3000)
                 };
                 if(option.timeout){
                     script.timer=setTimeout(function () {

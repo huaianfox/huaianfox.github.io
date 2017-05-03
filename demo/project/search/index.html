@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 	<title>Title</title>
 	<link rel="stylesheet" href="css/style.css">
@@ -13,17 +14,18 @@
 		<div class="search-wbesite" id="search-wbesite">
 			<a href="##" class="logo">Let'sGo</a>
 			<ul>
-				<li class="checked">淘宝</li>
-				<li>百度</li>
-				<li>360好搜</li>
-				<li>必应</li>
+				<li class="checked" data-index="1">淘宝</li>
+				<li data-index="2">百度</li>
+				<li data-index="3">360好搜</li>
+				<li data-index="4">必应</li>
+				<li data-index="5">豆瓣</li>
 			</ul>
 			<div class="search-checked" id="navigation">
 				淘宝
 			</div>
 		</div>
 		<form action="https://s.taobao.com/search" class="search-form"  id="search-form" method="get" accept-charset="utf-8"  target="_blank" >
-			<input type="text" class="search-text" name="q" id="search_input" autocomplete="off" maxlength="50" placeholder="请输入要输入要搜索内容">
+			<input type="text" class="search-text" name="q" id="search_input" autocomplete="off" maxlength="50" placeholder="请输入要输入要搜索的内容">
 			<button type="submit" class="search-button" id="submit_btn"><i></i></button>
 		</form>
 	</div>
@@ -35,7 +37,8 @@
 					{name:"taobao",action:"https://s.taobao.com/search",url:"https://suggest.taobao.com/sug?code=utf-8",valueType:"q",callType:"callback",get:"result",dataType:"jsonp"},
 					{name:"baidu",action:"https://www.baidu.com/s?wd=",url:"https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su",valueType:"wd",callType:"cb",get:"s",dataType:"jsonp"},
 					{name:"360",action:"https://www.so.com/s",url:"https://sug.so.360.cn/suggest?encodein=utf-8&encodeout=utf-8&format=json",valueType:"word",callType:"callback",get:"result",dataType:"jsonp"},
-					{name:"bing",action:"https://cn.bing.com/search",url:"https://api.bing.com/qsonhs.aspx?type=cb",valueType:"q",callType:"cb",get:"AS",dataType:"jsonp"}
+					{name:"bing",action:"https://cn.bing.com/search",url:"https://api.bing.com/qsonhs.aspx?type=cb",valueType:"q",callType:"cb",get:"AS",dataType:"jsonp"},
+					{name:"douban",action:"https://book.douban.com/subject_search",url:"http://api.douban.com/book/subjects?alt=xd",valueType:"q",callType:"callback",dataType:"jsonp",get:"entry"}
 				],
                 json=data[0],//json初始化为淘宝搜索数据，点击搜索项时切换其他搜索数据
 			    doc =document,
@@ -46,6 +49,7 @@
                 suggest=doc.querySelectorAll("#search-suggest")[0],
                 navigation=doc.querySelectorAll("#navigation")[0],
 				search_web=doc.querySelectorAll("#search-wbesite li");
+
 
 			forEach.call(search_web,function (item,index) {  //切换搜索
 				item.addEventListener("click",function () {
@@ -79,6 +83,7 @@
 				}
 
 				if(searchText==""||searchText==null){
+                    suggest.innerHTML="";
                     return
                 }
 
@@ -95,12 +100,12 @@
 			            value:searchText,
                         callType:json.callType,
 			            success:function (response) {
+//		                   console.log(response);
                             var data =response[json.get],
                                 html="";
-	                        console.log(data);
 //                            console.log(data.Results);
-                            if((Object.prototype.toString.call(data) === '[object Array]')&&!data.length){
-                                return
+                            if((Object.prototype.toString.call(data) === '[object Array]')){
+                                if(!data.length) return
                             }
                             if(Object.prototype.toString.call(data) === '[object Object]'&&!data.Results){
 //                                console.log(data);
@@ -128,11 +133,15 @@
                                     var array =data.Results[0].Suggests,
                                         url="";
                                     array.forEach(function (item) {
-//                                        console.log(url);
                                         html +="<div class='txt'>"+item.Txt+"</div>";
                                     });
 //                                    console.log(html);
                                     break;
+	                            case "douban":
+	                                data.forEach(function (item) {
+                                        html +="<div class='txt'>"+item.title.$t+"</div>";
+                                    });
+	                                break;
                             }
                             suggest.innerHTML =html;
                             suggest.style.display="block";
@@ -193,7 +202,14 @@
 				}
 
             },false);
-//
+
+
+            search_input.addEventListener("focus",function (e) {
+	           if(suggest.innerHTML){
+                   suggest.style.display="block";
+	           }
+            });
+
             search_form.addEventListener("submit",function (e) {//原始的百度数据 提交之后自动清除跳到百度首页，此处阻止提交行为，自定义打开要搜索的关键词
 	            var e=e||window.event;
 	            if(json.name=="baidu"){//针对百度的hack手段
@@ -216,10 +232,9 @@
 
 			doc.onclick =function (e) {
 			    var tar =e.target||window.event.srcElement;
-			    if(tar !=suggest){
+			    if(tar !=suggest&&tar !==search_input){
                     if(suggest.style.display=="block"){
                         suggest.style.display="none";
-
                     }
 			    }
             };
