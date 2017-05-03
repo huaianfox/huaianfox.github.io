@@ -134,6 +134,7 @@ body{
     padding: 0 0 0 20px;
     height: 30px;
     line-height: 30px;
+    cursor: pointer;
 }
 .suggest .txt a{
     color: inherit;
