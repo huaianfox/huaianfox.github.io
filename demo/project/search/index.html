@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-	<title>Title</title>
+	<title>在线搜索jsonp</title>
 	<link rel="stylesheet" href="css/style.css">
 	<script src="js/jsonp.js"></script>
 </head>
@@ -91,7 +91,7 @@
 	                return
 	            }
 				oldString =searchText;
-	            if(keyCode >= 65 && keyCode <= 90 || keyCode >= 48 && keyCode <= 57 || keyCode >= 96 && keyCode <= 111 || keyCode >= 186 && keyCode <= 222 || keyCode == 8 || keyCode == 46 ){   //响应查询的键码 字母键，（退格8），（删除46），（回车13）
+	            if(keyCode >= 65 && keyCode <= 90 || keyCode >= 48 && keyCode <= 57 || keyCode >= 96 && keyCode <= 111 || keyCode >= 186 && keyCode <= 222 || keyCode == 8 || keyCode == 46 || keyCode==32){   //响应查询的键码 字母键，（退格8），（删除46），（回车13） （空格32）
 
 		            myAjax({
 		               url:json.url,
