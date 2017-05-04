@@ -130,7 +130,7 @@ define(["jquery", "widget/widget", "widget/getData"], function ($, widget, getDa
             if(today.getFullYear() ===monthData.year&&today.getMonth() ===monthData.month-1){
                 tds.each(function (index,dom) {
                     var d =$(dom);
-                    if(d.html()==today.getDate()){
+                    if(d.attr("data-date")==today.getDate()){
                         d.addClass("today");
                     }
                 });
