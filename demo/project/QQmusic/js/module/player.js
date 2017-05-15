@@ -319,7 +319,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 timeReg= /\[\d{2}:\d{2}.\d{2}\]/g,//获取时间戳
                 lrc_src="http://music.qq.com/miniportal/static/lyric/{1}/{0}.xml",//歌词地址模板  {0}:歌曲id {1}:歌曲id%100 取余 680279
                 lrc=lrc_src.replace("{0}",id).replace("{1}",id%100),
-                yql = 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from xml where url="' + lrc + '"') + '&format=xml&callback=',
+                yql = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from xml where url="' + lrc + '"') + '&format=xml&callback=',
                 myAjax=AJ.getJson;
             if(!songList[index].noLyric ||!songList[index].lyricArray){
                 myAjax({
