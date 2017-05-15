@@ -407,10 +407,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 if(oP[i]){
                     var curT =oP[i].dataset.time;
                 }
-                if(oP[i+1]){
-                    var nextT=oP[i+1].dataset.time;
-                }
-                if(audioCurrentTime>curT&&audioCurrentTime<nextT){
+                if(audioCurrentTime>curT){
                     Array.prototype.forEach.call(oP,function (item) {
                         item.classList.remove("on");
                     });
@@ -418,11 +415,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     lyricScroll.style.top= -i*34+"px";
                     onlyLyric.style.top= -i*34+"px";
                 }
-                if(audioCurrentTime>curT&&audioCurrentTime>nextT){
-                    oP[lyricArray.length-2].classList.remove("on");
-                    oP[lyricArray.length-1].classList.add("on");
-                }
-
             }
 
         },
