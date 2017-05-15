@@ -65,8 +65,10 @@ define(function () {
                 if(target.classList.contains("dialog_close")){
                     _this.close();
                 }
-                if(target.classList.contains("dialog_btn_ok")||target.classList.contains("dialog_btn_cancel")){
+                if(target.classList.contains("dialog_btn_ok")){
                     opt.okBtn&&opt.okBtn();
+                    _this.close();
+                }else if(target.classList.contains("dialog_btn_cancel")){
                     _this.close();
                 }
             });
