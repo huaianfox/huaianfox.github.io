@@ -235,18 +235,22 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 if(_this.loopType%4==0){// 0--.循环模式
                     this.className ="music_loop_normal music_loop";
                     this.title="循环播放";
+                    console.log("循环播放");
                 }
                 if(_this.loopType%4==1){ //顺序播放
                     this.className ="music_loop_next music_loop";
                     this.title="顺序播放";
+                    console.log("顺序播放");
                 }
                 if(_this.loopType%4==2){ //随机
                     this.className ="music_loop_random music_loop";
                     this.title="随机播放";
+                    console.log("随机播放");
                 }
                 if(_this.loopType%4==3){ //单曲
                     this.className ="music_loop_only music_loop";
                     this.title="单曲播放";
+                    console.log("单曲播放");
                 }
             };
             prevBtn.onclick=function () {
@@ -333,6 +337,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                             result=[];
                         if(results.length){
                             data=res.documentElement.getElementsByTagName("lyric")[0].innerHTML;
+                            // console.log(data);
                             var arr=data.split("[offset:0]")[1].split("\n");
                             arr.shift();
                             arr.forEach(function (item) {
@@ -410,7 +415,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     Array.prototype.forEach.call(oP,function (item) {
                         item.classList.remove("on");
                     });
-                    oP[i].classList.add("on");
+                    oP[i]&&oP[i].classList.add("on");
                     lyricScroll.style.top= -i*34+"px";
                     onlyLyric.style.top= -i*34+"px";
                 }
