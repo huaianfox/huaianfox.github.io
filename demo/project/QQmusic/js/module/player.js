@@ -333,7 +333,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                             result=[];
                         if(results.length){
                             data=res.documentElement.getElementsByTagName("lyric")[0].innerHTML;
-                            console.log(data);
                             var arr=data.split("[offset:0]")[1].split("\n");
                             arr.shift();
                             arr.forEach(function (item) {
