@@ -281,7 +281,11 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                             rePlayer({
                                 ready:true,
                                 songList: music_temporary,
-                                currentIndex:playIndex-1>=0?playIndex-1:0
+                                currentIndex:playIndex-1>0?playIndex:0
+                            });
+                        }else{//只剩一首歌
+                            rePlayer({
+                                songList: music_temporary,
                             });
                         }
                     }else{//删除非当前歌曲
@@ -338,9 +342,9 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     hasMask:true,
                     okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
                         var oldPlayIndex =getPlayIndex(music_temporary,my_audio);
-                        isCheckArray.forEach(function (item) { // isCheckArray-->[0,3]
-                            music_temporary.splice(item,1);
-                        });
+
+                        music_temporary = filterArray(isCheckArray,music_temporary);//批量删除选中的歌曲
+
                         if(!music_temporary.length){ //是否清空播放列表
                             my_audio.src="";
                             rePlayer({  //更新数据 当前歌曲序号 i
@@ -526,6 +530,23 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
     }
 
 
+    function filterArray(a,b) {
+        var array=[],
+            obj={},
+            i=0,
+            j=0;
+        for(i=0;i<a.length;i++){
+            obj[a[i]]=100;
+        }
+        for(j=0;j<b.length;j++){
+            if(!obj[j]){
+                array.push(b[j]);
+            }
+        }
+        return array;
+    }
+
+
     function $(str,dom) { // 唯一节点
         var d=dom||document;
         return typeof str=="string"? d.querySelector(str):str;
@@ -537,7 +558,6 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
     function createHtml(res) { //处理搜索数据 并生成临时歌曲DOM
         var songArray=res.data.song.list;
-        searchDataArray=[];
         songArray.forEach(function (item,index) {
             var data ={};
             var album_mid=item.album.mid;
