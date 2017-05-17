@@ -14,7 +14,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
     var forEach =Array.prototype.forEach,
         searchDataArray=[], //临时存储，搜索刷新数据清零
-        music_temporary=Store.get("musicList")||[], //缓存歌单
+        lyricDataArray=[], //临时存储，刷新清零
+        music_temporary=Store.get("musicList")||[], //临时存储，临时歌单
         video =$("#video"),
         search_close =$("#search_close"),// 搜索显示按钮
         mask =$("#mask"),               //   遮罩
@@ -23,7 +24,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
         search_btn =$("#search_text_btn"),//搜索提交按钮
         page_nav =$("#page_nav"),//分页父元素
         search_songs =$("#search_songs_list"),//搜索的零时歌曲
-        audio_src = "https://ws.stream.qqmusic.qq.com/{id}.m4a?fromtag=46",//音频地址模板 {id}歌id曲
+        audio_src = "http://ws.stream.qqmusic.qq.com/{id}.m4a?fromtag=46",//音频地址模板 {id}歌id曲
         data_url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=46238140479099576&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=10&{valueType}={key}&{jsonpCallback}={cb}&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0",//歌曲相关信息
         img_src="http://imgcache.qq.com/music/photo/mid_album_300/{2}/{1}/{0}.jpg",//图片地址模板 {0}:album.mid  {1}:album.mid最后第一位 {2}:album.mid最后第二位
         lrc_src="http://music.qq.com/miniportal/static/lyric/{1}/{0}.xml",//歌词地址模板  {0}:歌曲id {1}:歌曲id%100 取余 680279
