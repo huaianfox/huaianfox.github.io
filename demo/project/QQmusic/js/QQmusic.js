@@ -14,8 +14,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
     var forEach =Array.prototype.forEach,
         searchDataArray=[], //临时存储，搜索刷新数据清零
-        lyricDataArray=[], //临时存储，刷新清零
-        music_temporary=Store.get("musicList")||[], //临时存储，临时歌单
+        music_temporary=Store.get("musicList")||[], //存储，缓存歌单
         video =$("#video"),
         search_close =$("#search_close"),// 搜索显示按钮
         mask =$("#mask"),               //   遮罩
@@ -176,9 +175,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                 })
             });
         }else if(target.classList.contains("icon_list_menu_add")){ //添加到 播放列表 我的歌单
-            console.log("add 1");
             bind_btn_event(target,"icon_list_menu_add",this,function (item,index) {
-                console.log("add 2");
                 if(my_audio.paused){
                     refresh_data(music_temporary,searchDataArray[index]);
                     rePlayer({
@@ -218,10 +215,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
         if(target.classList.contains("song_list_checkbox")){
             if(target.checked){
-                console.log(target.checked+"我是1");
                 target.parentNode.classList.add("song_has_checked");
             }else{
-                console.log(target.checked+"我是2");
                 target.parentNode.classList.remove("song_has_checked");
             }
         }
@@ -512,8 +507,6 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
     };
 
 
-
-
     function isChecked() {  //获取cheeckbox选中的元素
         var player_songlist_check ,
             i,
@@ -528,13 +521,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     array.push(i);
                 }
             }
-            if(array.length){
-                return array
-            }else{
-                return false;
-            }
         }
-        return false;
+        return array;
     }
 
 
@@ -555,7 +543,6 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
             var album_mid=item.album.mid;
             data.song=item.name;
             data.id=item.id;
-            // getLrc(data.id,data);
             data.singer=item.singer[0].name;
             data.album=item.album.name;
             data.src=audio_src.replace("{id}",item.id);

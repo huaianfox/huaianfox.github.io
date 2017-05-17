@@ -403,17 +403,19 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 songList=opt.songList,
                 lyricArray=songList[index].lyricArray,
                 lyricScroll =simSongInfo.lyricScroll,//正常模式 歌词盒子
+                len = lyricArray.length,
                 audio = opt.audio,
                 onlyLyric =opt.onlyLyric,  //纯净模式 歌词盒子
                 onlyBtn =opt.onlyBtn,
                 oP =null,
-                line;
+                lineHeight=34,
+                scrollT=0;
             if(onlyBtn.title=="打开纯净模式"){
                 oP=lyricScroll.querySelectorAll("p");
             }else{
                 oP=onlyLyric.querySelectorAll("p");
             }
-            for(var i=0;i<lyricArray.length;i++){
+            for(var i=0;i<len;i++){
                 var audioCurrentTime=audio.currentTime;
                 if(oP[i]){
                     var curT =oP[i].dataset.time;
@@ -422,9 +424,11 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     Array.prototype.forEach.call(oP,function (item) {
                         item.classList.remove("on");
                     });
+                    (i>=len)&&(i=len);
+                    scrollT = i*lineHeight;
                     oP[i]&&oP[i].classList.add("on");
-                    lyricScroll.style.top= -i*34+"px";
-                    onlyLyric.style.top= -i*34+"px";
+                    lyricScroll.style.top= -scrollT+"px";
+                    onlyLyric.style.top= -scrollT+"px";
                 }
             }
 
