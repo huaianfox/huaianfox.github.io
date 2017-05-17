@@ -38,7 +38,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
         this.option=option;
         this.loopType=0;//播放模式 0：列表循环 1：顺序 2：随机 3：单曲
         this.runTimer=null;
-        this.isScroll=true;//控制歌词滚动的钩子
         this._start();
     }
     Player.prototype ={
@@ -70,7 +69,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 audio=opt.audio,
                 simSongInfo=opt.simSongInfo,
                 songInfo=opt.songInfo;
-            this.isScroll=true;
+            // this.isScroll=true;
             audio.src=songList[index].src;
             playBtn.style.backgroundPosition="0 -100px";
             opt.bg.style.backgroundImage="url("+songList[index].img+")";
@@ -130,7 +129,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 progressPlay.style.width =percent;
 
 
-                if(songList[currindex]&&songList[currindex].lyricArray&&_this.isScroll){
+                if(songList[currindex]&&songList[currindex].lyricArray){
                     _this.showLyric(currindex);
                 }
 
@@ -410,8 +409,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 onlyLyric =opt.onlyLyric,  //纯净模式 歌词盒子
                 onlyBtn =opt.onlyBtn,
                 oP =null,
-                lineHeight=34,
-                scrollT=0;
+                lineHeight=34;
             if(onlyBtn.title=="打开纯净模式"){
                 oP=lyricScroll.querySelectorAll("p");
             }else{
@@ -426,14 +424,9 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     Array.prototype.forEach.call(oP,function (item) {
                         item.classList.remove("on");
                     });
-                    if(i>=len){
-                        i=len;
-                        this.isScroll =false;
-                    }
-                    scrollT = i*lineHeight;
                     oP[i]&&oP[i].classList.add("on");
-                    lyricScroll.style.top= -scrollT+"px";
-                    onlyLyric.style.top= -scrollT+"px";
+                    lyricScroll.style.top= -i*lineHeight+"px";
+                    onlyLyric.style.top= -i*lineHeight+"px";
                 }
             }
 
