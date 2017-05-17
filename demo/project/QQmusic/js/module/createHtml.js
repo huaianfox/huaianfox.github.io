@@ -48,7 +48,7 @@ define(function () {
                 }
                 song_data.forEach(function (item,index) {
                     html +="<li>"
-                        +"<div class='player_songlist_check player_list_item'><input type='checkbox' class='song_list_checkbox'><div class='song_list_number'>"+(index+1)+"</div></div> "
+                        +"<div class='player_songlist_check player_list_item'><div class='song_edit_check'><input type='checkbox' class='song_list_checkbox'></div><div class='song_list_number'>"+(index+1)+"</div></div> "
                         +"<div class='player_songlist_name player_list_item'>"+item.song+"</div>"
                         +"<div class='player_songlist_singer player_list_item'><a href='"+item.singer_href+".html'>"+item.singer+"</a></div>"
                         +"<div class='player_songlist_time player_list_item'>"+item.time+"<a href='javascript:;' class='icon_list_menu_delete icon_commom_menu'>删除</a></div>"

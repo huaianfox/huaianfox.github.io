@@ -21,7 +21,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 name:null,
                 singer:null,
                 album:null,
-                albumPic:null
+                albumPic:null,
+                lyricScroll:null
             },
             voiceControls:{ //音量控制
                 voice_all:null,//整个音量box
@@ -50,6 +51,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 data:Store.get("musicList"),
                 pNode:opt.editPannel
             });
+            this._playBtnEvent();
             if(opt.songList.length){//歌曲有数据
                 opt.ready&&this._ready(opt.currentIndex);
                 !opt.audio.paused&&this.syncsUI(opt.currentIndex);//处理 删除非当前歌曲时 的当前播放歌曲的样式
@@ -58,7 +60,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 this._resetPlayer();
                 return false;
             }
-            this._playBtnEvent();
         },
         _ready:function (index) {//准备就绪,立即播放
             var _this=this,
@@ -87,12 +88,16 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             var _this=this,
                 opt= this.config,
                 playBtn=opt.playBtn,
+                progress_play=opt.progress_play,
                 songList=opt.songList,
                 audio=opt.audio,
                 simSongInfo=opt.simSongInfo,
                 songInfo=opt.songInfo;
             console.log("zero");
             playBtn.style.backgroundPosition="0 -170px";
+            progress_play.style.width="";
+            console.log(progress_play);
+            this.runTimer&&clearInterval(this.runTimer);
             opt.bg.style.backgroundImage="";
             document.title ="我的音乐";
             simSongInfo.innerHTML ="";
@@ -100,6 +105,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             songInfo.name.innerHTML ="";
             songInfo.singer.innerHTML ="";
             songInfo.album.innerHTML ="";
+            songInfo.lyricScroll.innerHTML ="";
+            this.runTimer&&clearInterval(this.runTimer);
         },
         _goRuning:function (index) {
           var _this =this,
@@ -423,6 +430,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
 
         },
         syncsUI:function (index) { //处理 播放器外部样式 代码冗余 以后优化
+            var audio =this.config.audio;
             music_current(index);
             music_wave(index);
 

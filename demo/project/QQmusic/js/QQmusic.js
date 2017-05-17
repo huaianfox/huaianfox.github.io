@@ -3,27 +3,29 @@ require.config({
        store:"libs/store"
    }
 });
-requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dialog"],function (Store,GJ,CH,PE,DG) {
+requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dialog","module/pageIndex","module/scrollBar"],function (Store,GJ,CH,PE,DG,PG,SB) {
 
     var myAjax =GJ.getJson, //jsonp数据
         chtml =CH.CreateHtml, //Dom生成
         player=PE.player,  //播放器
-        dialog =DG.Dialog;
+        dialog =DG.Dialog,
+        Page =PG.Page,//分页
+        scrollBar =SB.scrollBar;//分页
 
     var forEach =Array.prototype.forEach,
         searchDataArray=[], //临时存储，搜索刷新数据清零
-        lyricDataArray=[], //临时存储，刷新清零
-        music_temporary=Store.get("musicList")||[], //临时存储，临时歌单
+        music_temporary=Store.get("musicList")||[], //缓存歌单
         video =$("#video"),
         search_close =$("#search_close"),// 搜索显示按钮
         mask =$("#mask"),               //   遮罩
         search_pannel =$("#search_pannel"),//搜索面板
         text =$("#search_text_input"),  //搜搜框
         search_btn =$("#search_text_btn"),//搜索提交按钮
+        page_nav =$("#page_nav"),//分页父元素
         search_songs =$("#search_songs_list"),//搜索的零时歌曲
-        audio_src = "http://ws.stream.qqmusic.qq.com/{id}.m4a?fromtag=46",//音频地址模板 {id}歌id曲
+        audio_src = "https://ws.stream.qqmusic.qq.com/{id}.m4a?fromtag=46",//音频地址模板 {id}歌id曲
         data_url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=46238140479099576&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=10&{valueType}={key}&{jsonpCallback}={cb}&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0",//歌曲相关信息
-        img_src="http://imgcache.qq.com/music/photo/mid_album_300/{2}/{1}/{0}.jpg",//图片地址模板 {0}:album.mid  {1}:album.mid最后第一位 {2}:album.mid最后第二位
+        img_src="https://imgcache.qq.com/music/photo/mid_album_300/{2}/{1}/{0}.jpg",//图片地址模板 {0}:album.mid  {1}:album.mid最后第一位 {2}:album.mid最后第二位
         lrc_src="http://music.qq.com/miniportal/static/lyric/{1}/{0}.xml",//歌词地址模板  {0}:歌曲id {1}:歌曲id%100 取余 680279
         search_href='https://y.qq.com/n/yqq/song/{key}.html',//歌曲,歌手，专辑 href地址模板  key 分别为 1:.mid  2:.singer[0].mid 3:.album.mid
         // yql = "http://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent("select * from xml where url='{site}'") + "&format=xml&callback=?",//第三方 请求xml
@@ -98,7 +100,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
             bg:j_bgImg
         },
 
-        oldVal="";//零时存储验证搜索关键词;
+        oldVal="",//零时存储验证搜索关键词,分页关键词
+        pageTotal=0;//零时存储查询结果，返回的数目
 
 
     search_close.onclick=function () {
@@ -134,15 +137,17 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
             dataType:"jsonp",
             type:"get",
             success:function (res) {
+                keyword=
                 createHtml(res);
+                createPage(res);
             }
         });
 
     },false);
 
     search_songs.addEventListener("click",function (e) { //搜索面板
-        e.stopPropagation();
         var target =e.target;
+        console.log(music_temporary);
         if(target.classList.contains("icon_list_menu_play")){ //立即播放添加到临时歌单
             bind_btn_event(target,"icon_list_menu_play",this,function (item,index) { // 两种情况， 1.已经存在在歌单中 2.没有
                 var isPlay=refresh_data(music_temporary,searchDataArray[index]);
@@ -153,7 +158,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                         songList: music_temporary,
                         currentIndex:isPlay
                     });
-                }else {
+                }else { //当前歌单没有
                     rePlayer({
                         ready:true,
                         waving:song_list_number,
@@ -169,14 +174,30 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     delay:2000
                 })
             });
-        }
-
-        if(target.classList.contains("icon_list_menu_add")){ //添加到 播放列表 我的歌单
+        }else if(target.classList.contains("icon_list_menu_add")){ //添加到 播放列表 我的歌单
+            console.log("add 1");
             bind_btn_event(target,"icon_list_menu_add",this,function (item,index) {
-                refresh_data(music_temporary,searchDataArray[index]);
-                rePlayer({
-                    songList: music_temporary
-                });
+                console.log("add 2");
+                if(my_audio.paused){
+                    refresh_data(music_temporary,searchDataArray[index]);
+                    rePlayer({
+                        songList: music_temporary
+                    });
+                }else{//正在播放
+                     var playIndex =getPlayIndex(music_temporary,my_audio),//当前播放索引
+                         addIndex=refresh_data(music_temporary,searchDataArray[index]);
+                    if(typeof addIndex =="number"){ //已经存在于歌单
+                        rePlayer({
+                            songList: music_temporary,
+                            currentIndex:playIndex
+                        });
+                    }else{//歌单里没有
+                        rePlayer({
+                            songList: music_temporary,
+                            currentIndex:playIndex+1
+                        });
+                    }
+                }
                 dialog({
                     width:"300px",
                     height:"auto",
@@ -194,6 +215,15 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
     player_songs.addEventListener("click",function (e) { // 歌曲管理面板
         var target =e.target;
 
+        if(target.classList.contains("song_list_checkbox")){
+            if(target.checked){
+                console.log(target.checked+"我是1");
+                target.parentNode.classList.add("song_has_checked");
+            }else{
+                console.log(target.checked+"我是2");
+                target.parentNode.classList.remove("song_has_checked");
+            }
+        }
         if(target.classList.contains("icon_list_menu_play")){  //播放
             bind_btn_event(target,"icon_list_menu_play",this,function (item,index) {
                 if(!my_audio.paused&&my_audio.currentSrc ==music_temporary[index].src){
@@ -244,71 +274,46 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
         if(target.classList.contains("icon_list_menu_delete")){ // 删除
             bind_btn_event(target,"icon_list_menu_delete",this,function (item,index) {
-                if(music_temporary[index].src ==my_audio.currentSrc){//删除的是 当前歌曲 播放下一首 索引为删除歌曲索引
-                    if(music_temporary.length>1){//歌单不是最后一首
+                var playIndex;//播放索引
+                if(!my_audio.paused){//当前正在播放歌曲
+                    playIndex =getPlayIndex(music_temporary,my_audio);
+                    if(playIndex ==index){//删除当前播放歌曲
+                        console.log("hi 我正在播放 你删除我么");
                         music_temporary.splice(index,1);
-                        if(index>music_temporary.length-1){ //当前歌曲是最后一首，index是数组位数
-                            index=music_temporary.length-1;
+
+                        if(music_temporary.length){
+                            rePlayer({
+                                ready:true,
+                                songList: music_temporary,
+                                currentIndex:playIndex-1>=0?playIndex-1:0
+                            });
                         }
+                    }else{//删除非当前歌曲
+                        music_temporary.splice(index,1);
+                        rePlayer({
+                            songList: music_temporary,
+                            currentIndex:playIndex>index?playIndex-1:playIndex
+                        });
+                    }
+                }else{ //当前没有播放歌曲 ,是否播放地址
+                    music_temporary.splice(index,1);
+                    playIndex =getPlayIndex(music_temporary,my_audio);//当前音频地址是否在播放队列中
+                    if(typeof playIndex=="number"){
+                        rePlayer({
+                            songList: music_temporary,
+                            currentIndex:playIndex
+                        });
+                    }else{
                         rePlayer({
                             ready:true,
                             songList: music_temporary,
-                            currentIndex:index
-                        });
-                    }else if(music_temporary.length==1){//如果当前播放的是最后一首
-                        music_temporary.splice(0,1);
-                        rePlayer({
-                            songList: music_temporary,
-                            currentIndex:index
-                        });
-                    }
-                }else{
-                    if(music_temporary.length==1){
-                        music_temporary.splice(0,1);
-                        rePlayer({  //更新数据 当前歌曲序号 i
-                            songList: music_temporary,
-                            currentIndex:0
-                        });
-                    }else{
-                        music_temporary.splice(index,1);
-                        music_temporary.forEach(function (item,i) {
-                            if(item.src==my_audio.currentSrc){
-                                rePlayer({  //更新数据 当前歌曲序号 i
-                                    songList: music_temporary,
-                                    currentIndex:i
-                                });
-                            }else{
-                                rePlayer({  //更新数据 当前歌曲序号 i
-                                    songList: music_temporary,
-                                    currentIndex:0
-                                });
-                            }
+                            currentIndex:index<=music_temporary.length-1?index:0
                         });
                     }
                 }
             })
         }
     },false);
-
-    song_list_checkbox_all.onclick=function () {
-        var player_songlist_check ;//所有选项
-        try{
-            player_songlist_check =$$(".song_list_checkbox",player_songs);
-        }catch(ex){
-        }
-        if(player_songlist_check.length){
-            if(this.checked){
-                forEach.call(player_songlist_check,function (item) {
-                    item.checked=true;
-                });
-            }else{
-                forEach.call(player_songlist_check,function (item) {
-                    item.checked=false;
-                });
-            }
-        }
-    };
-
 
 
     player_songlist_toolbar.addEventListener("click",function (e) {
@@ -336,70 +341,84 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     message:"确定要删除歌曲？",//提示信息
                     hasMask:true,
                     okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
-                        var deleteCurrentIndex; //用于确定 是否含有删除当前歌曲的索引 ，有是数字，没有undefined
-                        isCheckArray.forEach(function (item) {
-                            if(music_temporary[item].src==my_audio.currentSrc){
-                                deleteCurrentIndex=item;
-                            }
-                        });
+                        var oldPlayIndex =getPlayIndex(music_temporary,my_audio);
                         isCheckArray.forEach(function (item) { // isCheckArray-->[0,3]
                             music_temporary.splice(item,1);
                         });
-                        console.log(deleteCurrentIndex);
-                        if(typeof deleteCurrentIndex=="number"){
-                            rePlayer({  //更新数据 当前歌曲序号 i
-                                ready:true,
-                                songList: music_temporary,
-                                currentIndex:deleteCurrentIndex
-                            });
-                        }else{
+                        if(!music_temporary.length){ //是否清空播放列表
+                            my_audio.src="";
                             rePlayer({  //更新数据 当前歌曲序号 i
                                 songList: music_temporary
                             });
+                        }else{
+                            var playIndex =getPlayIndex(music_temporary,my_audio); //用于确定 是否含有删除当前歌曲的索引 ，有是数字，没有undefined
+                            if(my_audio.paused){//以后优化
+                                rePlayer({  //更新数据 当前歌曲序号 i
+                                    songList: music_temporary
+                                });
+
+                            }else{ //正在播放
+                                if(typeof playIndex=="number"){//当前歌曲没有被删除
+                                    console.log("当前歌曲没有被删除");
+                                    rePlayer({  //更新数据 当前歌曲序号 i
+                                        songList: music_temporary,
+                                        currentIndex:playIndex
+                                    });
+                                }else{//当前歌曲被删除
+                                    console.log("当前歌曲被删除");
+                                    rePlayer({
+                                        ready:true,
+                                        songList: music_temporary,
+                                        currentIndex:oldPlayIndex<music_temporary.length-1?oldPlayIndex:0//算法待优化
+                                    });
+                                }
+                            }
                         }
+                        song_list_checkbox_all.checked=false;
+                        song_list_checkbox_all.parentNode.className ="song_edit_check";
                     }
                 });
             }
-        }
-        if(target.classList.contains("song_toolbar_collect")){ //收藏
-            dialog({
-                width:"520",
-                height:"auto",
-                title:"QQ音乐",
-                type:"dialog_icon_tips_note", //图标类型
-                module:"1",// confirm 确认提示框2
-                message:"功能待开发",//提示信息
-                hasMask:true,
-                okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
-                }
-            });
-        }
-        if(target.classList.contains("song_toolbar_add")){ //添加
-            dialog({
-                width:"520",
-                height:"auto",
-                title:"QQ音乐",
-                type:"dialog_icon_tips_note", //图标类型
-                module:"1",// confirm 确认提示框2
-                message:"功能待开发",//提示信息
-                hasMask:true,
-                okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
-                }
-            });
-        }
+            if(target.classList.contains("song_toolbar_collect")){ //收藏
+                dialog({
+                    width:"520",
+                    height:"auto",
+                    title:"QQ音乐",
+                    type:"dialog_icon_tips_note", //图标类型
+                    module:"1",// confirm 确认提示框2
+                    message:"功能待开发",//提示信息
+                    hasMask:true,
+                    okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
+                    }
+                });
+            }
+            if(target.classList.contains("song_toolbar_add")){ //添加
+                dialog({
+                    width:"520",
+                    height:"auto",
+                    title:"QQ音乐",
+                    type:"dialog_icon_tips_note", //图标类型
+                    module:"1",// confirm 确认提示框2
+                    message:"功能待开发",//提示信息
+                    hasMask:true,
+                    okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
+                    }
+                });
+            }
 
-        if(target.classList.contains("song_toolbar_download")){ //下载
-            dialog({
-                width:"520",
-                height:"auto",
-                title:"QQ音乐",
-                type:"dialog_icon_tips_note", //图标类型
-                module:"1",// confirm 确认提示框2
-                message:"暂不提供下载！",//提示信息
-                hasMask:true,
-                okBtn:function () {//处理 两张情况  删除歌曲中 --->1.有当前播放歌曲 2.当前播放歌曲
-                }
-            });
+            if(target.classList.contains("song_toolbar_download")){ //下载
+                dialog({
+                    width:"520",
+                    height:"auto",
+                    title:"QQ音乐",
+                    type:"dialog_icon_tips_note", //图标类型
+                    module:"1",// confirm 确认提示框2
+                    message:"暂不提供下载！",//提示信息
+                    hasMask:true,
+                    okBtn:function () {
+                    }
+                });
+            }
         }
         if(target.classList.contains("song_toolbar_clear")){ //清空列表
             if(music_temporary.length){
@@ -416,6 +435,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                         rePlayer({  //更新数据 当前歌曲序号 i
                             songList: music_temporary
                         });
+                        song_list_checkbox_all.checked=false;
+                        song_list_checkbox_all.parentNode.className ="song_edit_check";
                     }
                 });
             }
@@ -424,18 +445,29 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
 
     function refresh_data(array,data) {//刷新数据
-        console.log(data);
-        var index=array.indexOf(data);
-        if(index==-1){
-            array.unshift(data);
+        var hasData =array.some(function (item) {
+            return item.src==data.src;
+        });
+        if(hasData){
+            for(var i=0;i<array.length;i++){
+                if(array[i].src==data.src){
+                    return i;
+                }
+            }
         }else{
-            return index;
+            array.unshift(data);
         }
     }
-    function rePlayer(option) { //更新播放器 数据
+
+    function rePlayer(option) { //更新播放器 数据 通过数据变化监听歌单的高度变化
         var obj={};
         Object.assign(obj,obj,player_default,option);
         player(obj);
+        scrollBar({
+            content:".scroll_viewport",
+            scrollBox:"#scroll_box",
+            scrollBar:".srcoll_bar"
+        });
     }
 
     function bind_btn_event(target,cls,self,fn) { // 绑定 按钮事件
@@ -446,6 +478,40 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                 }
             });
     }
+
+    function getPlayIndex(array,audio) { //获取当前音频在播放队列中的索引
+        for(var i=0;i<array.length;i++) {
+            if (array[i].src == audio.currentSrc) {
+                return i
+            }
+        }
+    }
+
+    song_list_checkbox_all.onclick=function () {
+        var player_songlist_check ;//所有选项
+        try{
+            player_songlist_check =$$(".song_list_checkbox",player_songs);
+        }catch(ex){
+        }
+        if(player_songlist_check.length){
+            if(this.checked){
+                this.parentNode.className +=" song_has_checked";
+                forEach.call(player_songlist_check,function (item) {
+                    item.checked=true;
+                    item.parentNode.className +=" song_has_checked";
+                });
+            }else{
+                forEach.call(player_songlist_check,function (item) {
+                    item.checked=false;
+                    item.parentNode.className ="song_edit_check"
+                });
+                this.parentNode.className +="song_edit_check";
+            }
+        }
+    };
+
+
+
 
     function isChecked() {  //获取cheeckbox选中的元素
         var player_songlist_check ,
@@ -507,6 +573,28 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
         });
     }
 
+    function createPage(res) {
+        var pageTotal =res.data.song.totalnum;
+        Page({
+            total:pageTotal,
+            parent:page_nav,
+            on:function (index) {
+                var url =data_url.replace("p=1","p="+index);
+                console.log(index);
+                myAjax({
+                    url:url,
+                    valueType:"w",
+                    value:oldVal,
+                    callType:"jsonpCallback",
+                    dataType:"jsonp",
+                    type:"get",
+                    success:function (data) {
+                        createHtml(data);
+                    }
+                });
+            }
+        });
+    }
 
     rePlayer({
         songList:music_temporary

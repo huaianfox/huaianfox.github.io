@@ -27,9 +27,7 @@ define(function () {
                 opt=Object.assign(this.config,this.option);
             this.createHtml();
             if(opt.delay){
-                console.log(opt.delay);
                 var delay=Math.abs(parseInt(opt.delay));
-                console.log(this.winBox);
                 setTimeout( function () {
                     _this.close();
                 },delay)
