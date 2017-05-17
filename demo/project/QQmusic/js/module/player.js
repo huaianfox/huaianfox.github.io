@@ -38,6 +38,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
         this.option=option;
         this.loopType=0;//播放模式 0：列表循环 1：顺序 2：随机 3：单曲
         this.runTimer=null;
+        this.isScroll=true;//控制歌词滚动的钩子
         this._start();
     }
     Player.prototype ={
@@ -69,6 +70,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 audio=opt.audio,
                 simSongInfo=opt.simSongInfo,
                 songInfo=opt.songInfo;
+            this.isScroll=true;
             audio.src=songList[index].src;
             playBtn.style.backgroundPosition="0 -100px";
             opt.bg.style.backgroundImage="url("+songList[index].img+")";
@@ -128,7 +130,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 progressPlay.style.width =percent;
 
 
-                if(songList[currindex]&&songList[currindex].lyricArray){
+                if(songList[currindex]&&songList[currindex].lyricArray&&_this.isScroll){
                     _this.showLyric(currindex);
                 }
 
@@ -424,7 +426,10 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     Array.prototype.forEach.call(oP,function (item) {
                         item.classList.remove("on");
                     });
-                    (i>=len)&&(i=len);
+                    if(i>=len){
+                        i=len;
+                        this.isScroll =false;
+                    }
                     scrollT = i*lineHeight;
                     oP[i]&&oP[i].classList.add("on");
                     lyricScroll.style.top= -scrollT+"px";
