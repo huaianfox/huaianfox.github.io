@@ -83,6 +83,7 @@ img {
 .icon_list_menu .icon_list_menu_play{
     background-position: 0 0;
 }
+
 .icon_list_menu .icon_list_menu_play.icon_list_menu_play_current{
     background-position:-80px -200px;
 }
@@ -111,16 +112,31 @@ img {
     background-position: -120px -160px;
 }
 
-
+.player_song_list .icon_list_menu .icon_list_menu_play{
+    background-position: -80px 0 ;
+}
 .player_song_list .icon_list_menu .icon_list_menu_play:hover{
     background-position: -120px 0 ;
+}
+.player_song_list .icon_list_menu .icon_list_menu_add{
+    background-position: -80px -80px;
 }
 .player_song_list .icon_list_menu .icon_list_menu_add:hover{
     background-position: -120px -80px;
 }
+.player_song_list .icon_list_menu .icon_list_menu_download{
+    background-position: -80px -120px;
+}
 .player_song_list .icon_list_menu .icon_list_menu_download:hover{
     background-position: -120px -120px;
 }
+.player_song_list .icon_list_menu .icon_list_menu_delete{
+    background-position: -80px -160px;
+}
+.player_song_list .icon_list_menu .icon_list_menu_delete:hover{
+    background-position: -120px -160px;
+}
+/*
 /*
 *  ***********page style
 ***/
