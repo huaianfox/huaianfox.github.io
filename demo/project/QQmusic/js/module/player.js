@@ -296,10 +296,14 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                             currentIndex++;
                             _this._ready(currentIndex);
                         }
+                        if(currentIndex=opt.songList.length-1){
+                            _this.syncsUI();
+                            playBtn.style.backgroundPosition="0 -170px";
+                        }
                         break;
                     case 2:
                         var index =parseInt(Math.random()*len);
-                        _this._ready(currentIndex);
+                        _this._ready(index);
                         break;
                     case 3:
                         _this._ready(currentIndex);
