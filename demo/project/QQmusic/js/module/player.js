@@ -96,12 +96,13 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 songInfo=opt.songInfo;
             console.log("zero");
             playBtn.style.backgroundPosition="0 -170px";
-            progress_play.style.width="";
+            progress_play.style.width="0";
             console.log(progress_play);
             this.runTimer&&clearInterval(this.runTimer);
             opt.bg.style.backgroundImage="";
             document.title ="我的音乐";
             simSongInfo.innerHTML ="";
+            opt.showTime.innerHTML ="";
             songInfo.albumPic.src="https://y.gtimg.cn/mediastyle/yqq/extra/player_cover.png?max_age=31536000";
             songInfo.name.innerHTML ="";
             songInfo.singer.innerHTML ="";

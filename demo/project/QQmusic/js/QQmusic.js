@@ -346,7 +346,6 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                         music_temporary = filterArray(isCheckArray,music_temporary);//批量删除选中的歌曲
 
                         if(!music_temporary.length){ //是否清空播放列表
-                            my_audio.src="";
                             rePlayer({  //更新数据 当前歌曲序号 i
                                 songList: music_temporary
                             });
