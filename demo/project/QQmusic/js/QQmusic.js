@@ -431,7 +431,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     message:"确定要清空列表？",//提示信息
                     hasMask:true,
                     okBtn:function () {
-                        music_temporary=[];
+                        music_temporary.length=0;
                         rePlayer({  //更新数据 当前歌曲序号 i
                             songList: music_temporary
                         });

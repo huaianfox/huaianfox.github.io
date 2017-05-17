@@ -334,7 +334,9 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 lrc=lrc_src.replace("{0}",id).replace("{1}",id%100),
                 yql = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from xml where url="' + lrc + '"') + '&format=xml&callback=',
                 myAjax=AJ.getJson;
-            if(!songList[index].noLyric ||!songList[index].lyricArray){
+            if(songList[index].noLyric || songList[index].lyricArray){
+                _this.renderLyric(index);
+            }else{
                 myAjax({
                     url:yql,
                     dataType:"xml",
@@ -372,8 +374,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                         _this.renderLyric(index);
                     }
                 });
-            }else{
-                _this.renderLyric(index);
             }
         },
         renderLyric:function (index) {
