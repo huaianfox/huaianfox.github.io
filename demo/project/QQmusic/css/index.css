@@ -84,12 +84,7 @@ img {
     background-position: 0 0;
 }
 
-.icon_list_menu .icon_list_menu_play.icon_list_menu_play_current{
-    background-position: 0 -200px;
-}
-.player_style_normal #player_edit_list .icon_list_menu  .icon_list_menu_play.icon_list_menu_play_current:hover{
-    background-position:-120px -200px;
-}
+
 .icon_list_menu .icon_list_menu_play:hover{
     background-position: -40px 0 ;
 }
@@ -135,6 +130,12 @@ img {
 }
 .player_song_list .icon_list_menu .icon_list_menu_delete:hover{
     background-position: -120px -160px;
+}
+.player_song_list .icon_list_menu .icon_list_menu_play.icon_list_menu_play_current{
+    background-position: 0 -200px;
+}
+.player_song_list .icon_list_menu .icon_list_menu_play.icon_list_menu_play_current:hover{
+    background-position:-120px -200px;
 }
 /*
 /*
