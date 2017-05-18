@@ -74,17 +74,12 @@ img {
     margin-top: 7px;
     background: url("../images/icon_list_menu.png") no-repeat;
 }
-
 .player_songlist_check{
 
 }
-
-
 .icon_list_menu .icon_list_menu_play{
     background-position: 0 0;
 }
-
-
 .icon_list_menu .icon_list_menu_play:hover{
     background-position: -40px 0 ;
 }
@@ -137,7 +132,6 @@ img {
 .player_song_list .icon_list_menu .icon_list_menu_play.icon_list_menu_play_current:hover{
     background-position:-120px -200px;
 }
-/*
 /*
 *  ***********page style
 ***/
@@ -437,11 +431,14 @@ html,body{
 .scroll_area{
     position: absolute;
     top: 0;
-    right: 5px;
-    width: 9px;
+    right: 2px;
+    width: 7px;
     height: 100%;
     background: transparent;
     cursor: pointer;
+}
+.scroll_area:hover{
+    width: 9px;
 }
 .scroll_area .srcoll_bar{
     position: absolute;
@@ -455,7 +452,7 @@ html,body{
     border-radius: 4px;
 }
 .scroll_area .srcoll_bar:hover{
-    background: rgba(0,0,0,.6);
+    background: rgba(0,0,0,.7);
 }
 
 
@@ -941,6 +938,10 @@ html,body{
 .search_song_list .page_nav a.current,.search_song_list .page_nav a:hover{
     color: #fff;
     background: #31c27c;;
+}
+.search_song_list .page_nav a:hover{
+    opacity: .8;
+    filter: alpha(opacity=80);
 }
 
 /*

@@ -150,6 +150,7 @@ define(function () {
                 for(j=last+num-2;j<=last;j++){
                     html +="<a href='javascript:;' class='pageindex "+(j==last+num?"current":"")+"'>"+j+"</a>";
                 }
+                html +="<a class='next' href='javascript:;'>&gt;</a>";
             }
             return html;
         },

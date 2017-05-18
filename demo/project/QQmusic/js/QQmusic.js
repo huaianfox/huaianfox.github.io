@@ -319,6 +319,9 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
     player_songlist_toolbar.addEventListener("click",function (e) {
         var target =e.target||wind.event.srcEvent,
             isCheckArray =isChecked();
+        if(!music_temporary.length){
+            return
+        }
         if(!isCheckArray.length){
             if(target.classList.contains("song_toolbar_add")||target.classList.contains("song_toolbar_delete")||target.classList.contains("song_toolbar_download")||target.classList.contains("song_toolbar_collect")){ //添加
                 dialog({
@@ -346,6 +349,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                         music_temporary = filterArray(isCheckArray,music_temporary);//批量删除选中的歌曲
 
                         if(!music_temporary.length){ //是否清空播放列表
+                            my_audio.src="";
                             rePlayer({  //更新数据 当前歌曲序号 i
                                 songList: music_temporary
                             });
@@ -431,6 +435,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     hasMask:true,
                     okBtn:function () {
                         music_temporary.length=0;
+                        my_audio.src="";
                         rePlayer({  //更新数据 当前歌曲序号 i
                             songList: music_temporary
                         });
@@ -488,6 +493,9 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
     song_list_checkbox_all.onclick=function () {
         var player_songlist_check ;//所有选项
+        if(!music_temporary.length){
+            this.checked=false;
+        }
         try{
             player_songlist_check =$$(".song_list_checkbox",player_songs);
         }catch(ex){
@@ -559,8 +567,10 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
         var songArray=res.data.song.list;
         searchDataArray.length=0;
         songArray.forEach(function (item,index) {
-            var data ={};
-            var album_mid=item.album.mid;
+            var data ={},
+                album_mid=item.album.mid,
+                m,//分
+                s;//秒
             data.song=item.name;
             data.id=item.id;
             data.singer=item.singer[0].name;
@@ -571,7 +581,9 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
             data.singer_href=search_href.replace("{key}",item.singer[0].mid);
             data.album_href=search_href.replace("{key}",album_mid);
             data.mid=item.mid;
-            data.time =parseInt(item.interval/60)+":"+item.interval%60;
+            m =parseInt(item.interval/60);
+            s =parseInt(item.interval%60);
+            data.time =(m<9?"0"+m:m)+":"+(s<9?"0"+s:s);
             searchDataArray.push(data);
         });
         chtml({

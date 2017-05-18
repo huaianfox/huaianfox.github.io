@@ -83,7 +83,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             this.syncsUI(index);
             this.getLyric(index);
             this._goRuning(index);
-
         },
         _resetPlayer:function () {//重置播放器
             var _this=this,
@@ -96,19 +95,15 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 songInfo=opt.songInfo;
             console.log("zero");
             playBtn.style.backgroundPosition="0 -170px";
-            progress_play.style.width="0";
-            console.log(progress_play);
-            this.runTimer&&clearInterval(this.runTimer);
             opt.bg.style.backgroundImage="";
             document.title ="我的音乐";
             simSongInfo.innerHTML ="";
-            opt.showTime.innerHTML ="";
-            songInfo.albumPic.src="https://y.gtimg.cn/mediastyle/yqq/extra/player_cover.png?max_age=31536000";
+            songInfo.albumPic.src="images/player_cover.png";
             songInfo.name.innerHTML ="";
             songInfo.singer.innerHTML ="";
             songInfo.album.innerHTML ="";
+            opt.onlyLyric.innerHTML="";
             songInfo.lyricScroll.innerHTML ="";
-            this.runTimer&&clearInterval(this.runTimer);
         },
         _goRuning:function (index) {
           var _this =this,
@@ -119,15 +114,32 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
               currentTime,
               duration,
               percent,
+              minutes,
+              seconds,
+              m,
+              s,
               showTime=opt.showTime,
               currindex=index;
             this.runTimer&&clearInterval(this.runTimer);
             this.runTimer =setInterval(function () {
                 currentTime =audio.currentTime;
                 duration =audio.duration;
-                percent=(currentTime*100/duration).toFixed(2)+"%";
-                showTime.innerHTML =parseInt(currentTime/60)+":"+(parseInt(currentTime%60)<9?"0"+parseInt(currentTime%60):parseInt(currentTime%60))+" / "+parseInt(duration/60)+":"+(parseInt(duration%60)<9?"0"+parseInt(duration%60):parseInt(duration%60));
-                progressPlay.style.width =percent;
+                console.log(duration);
+                if(!duration){
+                    showTime.innerHTML="";
+                    progressPlay.style.width =0;
+                    clearInterval(_this.runTimer);
+                }else{
+                    m=parseInt(currentTime/60);
+                    s =parseInt(currentTime%60);
+                    minutes=parseInt(duration/60);
+                    seconds =parseInt(duration%60);
+                    minutes =minutes>9?minutes:"0"+minutes;
+                    seconds =seconds>9?seconds:"0"+seconds;
+                    percent=(currentTime*100/duration).toFixed(2)+"%";
+                    showTime.innerHTML =(m>9?m:"0"+m)+":"+(s>9?s:"0"+s)+" / "+minutes+":"+seconds;
+                    progressPlay.style.width =percent;
+                }
 
 
                 if(songList[currindex]&&songList[currindex].lyricArray){
@@ -166,11 +178,12 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 }else{
                     if(audio.paused){
                         audio.play();
+                        _this._goRuning(_this.config.currentIndex);
                         this.style.backgroundPosition="0 -100px";
                         _this.syncsUI(_this.config.currentIndex);
                     }else{
                         audio.pause();
-                        window.clearInterval(_this.runTimer);
+                        _this.runTimer&&clearInterval(_this.runTimer);
                         this.style.backgroundPosition="0 -170px";
                         _this.syncsUI();
                     }
@@ -178,6 +191,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             };
 
             progress_all.onclick =function (e) {
+                if(!audio.duration) return;
                 var clientX =e.clientX,
                     $width =this.offsetWidth,
                     $left =getPos(this,"Left"),
@@ -187,6 +201,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             };
 
             progress_current.onmousedown=function (e) {
+                if(!audio.duration) return;
                 e.stopPropagation();
                 var $dot =this.offsetWidth,
                     $width =progress_all.offsetWidth,
@@ -265,10 +280,12 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             prevBtn.onclick=function () {
                 // currentIndex--;
                 // currentIndex<0 &&(currentIndex=len-1);
+                if(!len) return;
                 --currentIndex<0&&(currentIndex=len-1);
                 _this._ready(currentIndex);
             };
             nextBtn.onclick=function () {
+                if(!len) return;
                 ++currentIndex>len-1&&(currentIndex=0);
                 _this._ready(currentIndex);
             };
