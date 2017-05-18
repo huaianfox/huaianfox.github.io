@@ -557,6 +557,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
 
     function createHtml(res) { //处理搜索数据 并生成临时歌曲DOM
         var songArray=res.data.song.list;
+        searchDataArray.length=0;
         songArray.forEach(function (item,index) {
             var data ={};
             var album_mid=item.album.mid;
