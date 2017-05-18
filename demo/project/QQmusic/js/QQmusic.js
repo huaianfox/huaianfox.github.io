@@ -504,7 +504,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                     item.checked=false;
                     item.parentNode.className ="song_edit_check"
                 });
-                this.parentNode.className +="song_edit_check";
+                this.parentNode.className ="song_edit_check";
             }
         }
     };
