@@ -532,10 +532,10 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
     function filterArray(a,b) {
         var array=[],
             obj={},
-            i=0,
-            j=0;
+            i,
+            j;
         for(i=0;i<a.length;i++){
-            obj[a[i]]=100;
+            obj[a[i]]=100;//可以是 任何真值
         }
         for(j=0;j<b.length;j++){
             if(!obj[j]){
