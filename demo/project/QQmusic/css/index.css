@@ -120,10 +120,10 @@ img {
 .player_song_list .icon_list_menu .icon_list_menu_download:hover{
     background-position: -120px -120px;
 }
-.player_song_list .icon_list_menu .icon_list_menu_delete{
+.player_song_list  .icon_list_menu_delete{
     background-position: -80px -160px;
 }
-.player_song_list .icon_list_menu .icon_list_menu_delete:hover{
+.player_song_list .icon_list_menu_delete:hover{
     background-position: -120px -160px;
 }
 .player_song_list .icon_list_menu .icon_list_menu_play.icon_list_menu_play_current{
