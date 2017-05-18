@@ -321,7 +321,7 @@ html,body{
     padding-right: 30%;
     overflow: hidden;
     text-overflow: ellipsis;
-    word-spacing: normal;
+    white-space: nowrap;
 }
 .player_mod_body  .player_songlist_singer{
     width: 20%;
@@ -410,7 +410,7 @@ html,body{
     color: #31c27c
 }
 .player_song_list .icon_list_menu{
-    left: 40%;
+    left: 45%;
 }
 .player_songlist_time .icon_list_menu_delete{
     display: none;
@@ -596,8 +596,12 @@ html,body{
     float: left;
     height: 25px;
     line-height: 25px;
-    margin-right: 40px;
+    /* margin-right: 40px; */
     text-indent: 10%;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .player_music_time{
     position: absolute;
@@ -908,7 +912,7 @@ html,body{
     line-height: 50px;
     overflow: hidden;
     text-overflow: ellipsis;
-    word-spacing: normal;
+    white-space: nowrap;
     cursor: pointer;
 }
 .songlist_list .songlist_item a{

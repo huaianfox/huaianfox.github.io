@@ -38,6 +38,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
         this.option=option;
         this.loopType=0;//播放模式 0：列表循环 1：顺序 2：随机 3：单曲
         this.runTimer=null;
+        this.isControlSpeed=true;
         this._start();
     }
     Player.prototype ={
@@ -75,6 +76,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             opt.bg.style.backgroundImage="url("+songList[index].img+")";
             document.title ="正在播放..."+songList[index].song +" - " +songList[index].singer;
             simSongInfo.innerHTML =songList[index].song +" - " +songList[index].singer;
+            simSongInfo.title =songList[index].song +" - " +songList[index].singer;
             songInfo.albumPic.src=songList[index].img;
             songInfo.name.innerHTML ="歌曲名 ： "+songList[index].song;
             songInfo.singer.innerHTML ="歌手名 ： "+songList[index].singer;
@@ -98,6 +100,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             opt.bg.style.backgroundImage="";
             document.title ="我的音乐";
             simSongInfo.innerHTML ="";
+            simSongInfo.title ="";
             songInfo.albumPic.src="images/player_cover.png";
             songInfo.name.innerHTML ="";
             songInfo.singer.innerHTML ="";
@@ -114,36 +117,29 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
               currentTime,
               duration,
               percent,
-              minutes,
-              seconds,
-              m,
-              s,
-              showTime=opt.showTime,
-              currindex=index;
+              totalTime,
+              nowTime,
+              showTime=opt.showTime;
             this.runTimer&&clearInterval(this.runTimer);
             this.runTimer =setInterval(function () {
                 currentTime =audio.currentTime;
                 duration =audio.duration;
-                console.log(duration);
                 if(!duration){
                     showTime.innerHTML="";
                     progressPlay.style.width =0;
                     clearInterval(_this.runTimer);
                 }else{
-                    m=parseInt(currentTime/60);
-                    s =parseInt(currentTime%60);
-                    minutes=parseInt(duration/60);
-                    seconds =parseInt(duration%60);
-                    minutes =minutes>9?minutes:"0"+minutes;
-                    seconds =seconds>9?seconds:"0"+seconds;
-                    percent=(currentTime*100/duration).toFixed(2)+"%";
-                    showTime.innerHTML =(m>9?m:"0"+m)+":"+(s>9?s:"0"+s)+" / "+minutes+":"+seconds;
-                    progressPlay.style.width =percent;
+                    if(_this.isControlSpeed){
+                        percent =parseInt(100*currentTime/duration)+"%";
+                        totalTime =_this.playTime(duration);
+                        nowTime =_this.playTime(currentTime);
+                        showTime.innerHTML =nowTime+" / "+totalTime;
+                        progressPlay.style.width =percent;
+                    }
                 }
 
-
-                if(songList[currindex]&&songList[currindex].lyricArray){
-                    _this.showLyric(currindex);
+                if(songList[index]&&songList[index].lyricArray){
+                    _this.showLyric(index);
                 }
 
             },500);
@@ -160,6 +156,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 playStyle=opt.playStyle,
                 progress_all=opt.progress_all,
                 progressPlay=opt.progress_play,
+                showTime=opt.showTime,
                 progress_current=opt.progress_current,
                 voice_all=opt.voiceControls.voice_all,
                 voice_play=opt.voiceControls.voice_paly,
@@ -168,7 +165,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 currentIndex =opt.currentIndex,
                 playTyoe=opt.playType,
                 audio=this.config.audio,
-                drag=false;
+                doc =document;
+                isDrag=false;
 
             playBtn.onclick =function () { // 播放？暂停
                 if(opt.songList.length==0){
@@ -191,13 +189,14 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             };
 
             progress_all.onclick =function (e) {
+                e.stopPropagation();
                 if(!audio.duration) return;
                 var clientX =e.clientX,
                     $width =this.offsetWidth,
                     $left =getPos(this,"Left"),
-                    percent =(clientX-$left)/$width;
-                progressPlay.style.width =percent.toFixed(2)*100+"%";
-                audio.currentTime =audio.duration*percent;
+                    percent =(clientX-$left)*100/$width;
+                progressPlay.style.width =parseInt( percent)+"%";
+                audio.currentTime =audio.duration*percent/100;
             };
 
             progress_current.onmousedown=function (e) {
@@ -210,24 +209,24 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     percent,
                     nowX,
                     $totlX,
-                    moveX;
-                drag=true;
-                console.log(startX - $left);  //  ---->开始的距离
-                document.onmousemove=function (e) {
-                    if(drag) {
+                    moveX,
+                    duration=audio.duration,
+                    timeStr=showTime.innerHTML;
+                isDrag=true;
+                _this.isControlSpeed=false;
+                doc.onmousemove=function (e) {
+                    if(isDrag) {
                         nowX = e.clientX;
                         moveX = nowX - $left;
                         percent = moveX / $width;
-                        console.log(nowX - $left);
-                        progressPlay.style.width = percent.toFixed(2) * 100 + "%";
+                        progressPlay.style.width =parseInt( percent * 100) + "%";
+                        showTime.innerHTML =_this.playTime(duration*percent) +" / "+_this.playTime(duration);
                     }
                 };
-                document.onmouseup=function () {
-                    drag=false;
-                    audio.currentTime =audio.duration*percent;
-                    console.log(drag);
-                    return false;
-                }
+                doc.onmouseup=function () {
+                    isDrag=false;
+                    _this.isControlSpeed=true;
+                };
             };
 
             voice_all.onclick=function (e) {
@@ -482,6 +481,17 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                     console.log(ex);
                 }
             }
+        },
+        playTime:function (duration) {
+            var str="",
+                m,
+                s;
+            m =parseInt(duration/60);
+            m =m>9?m:"0"+m;
+            s =parseInt(duration%60);
+            s =s>9?s:"0"+s;
+            str = m+":"+ s;
+            return str;
         }
     };
 

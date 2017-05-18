@@ -284,8 +284,9 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
                                 currentIndex:playIndex-1>0?playIndex:0
                             });
                         }else{//只剩一首歌
+                            my_audio.src="";
                             rePlayer({
-                                songList: music_temporary,
+                                songList: music_temporary
                             });
                         }
                     }else{//删除非当前歌曲
