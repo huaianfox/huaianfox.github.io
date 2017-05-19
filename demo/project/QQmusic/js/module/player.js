@@ -226,6 +226,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 doc.onmouseup=function () {
                     isDrag=false;
                     _this.isControlSpeed=true;
+                    doc.onmousemove=null;
+                    doc.onmouseup=null;
                 };
             };
 
@@ -349,7 +351,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 songList=opt.songList,
                 id =songList[index].id,
                 lyricDataArray=[],
-                timeReg= /\[\d{2}:\d{2}.\d{2}\]/g,//获取时间戳
+                timeReg= /\[[\w\W]+\]/g,//获取时间戳
                 lrc_src="http://music.qq.com/miniportal/static/lyric/{1}/{0}.xml",//歌词地址模板  {0}:歌曲id {1}:歌曲id%100 取余 680279
                 lrc=lrc_src.replace("{0}",id).replace("{1}",id%100),
                 yql = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from xml where url="' + lrc + '"') + '&format=xml&callback=',
@@ -369,18 +371,22 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                         if(results.length){
                             data=res.documentElement.getElementsByTagName("lyric")[0].innerHTML;
                             // console.log(data);
-                            var arr=data.split("[offset:0]")[1].split("\n");
+                            var arr=data.split("[offset:0]")[1].split("\n"),
+                                arr1;//歌词中可能有空白符，match提取时间返回null
                             arr.shift();
                             arr.forEach(function (item) {
                                 var time,//每一组时间
                                     value,
                                     t,
                                     timeArray;
-                                time=item.match(timeReg)[0].replace("[","").replace("]","");
-                                value=item.split("]")[1].replace("]]>","");
-                                t=time.split(":");
-                                timeArray =parseInt(t[0])*60 + (+parseFloat(t[1]).toFixed(2));  //当前时间
-                                result.push([timeArray,value]);
+                                arr1=item.match(timeReg);
+                                if(arr1){
+                                    time =arr1[0].replace("[","").replace("]","");
+                                    value=item.split("]")[1].replace("]]>","");
+                                    t=time.split(":");
+                                    timeArray =parseInt(t[0])*60 + (+parseFloat(t[1]).toFixed(2));  //当前时间
+                                    result.push([timeArray,value]);
+                                }
                             });
                             result.forEach(function (item,index) {
                                 if(!item[1]){
