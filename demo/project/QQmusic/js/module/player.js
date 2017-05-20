@@ -154,6 +154,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 voiceBtn=opt.voiceBtn,
                 onlyBtn=opt.onlyBtn,
                 playStyle=opt.playStyle,
+                lyricMask=playStyle.mask,
                 progress_all=opt.progress_all,
                 progressPlay=opt.progress_play,
                 showTime=opt.showTime,
@@ -241,17 +242,19 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 audio.volume=percent.toFixed(1);
             };
 
-            onlyBtn.onclick=function () {
-                if(this.title=="打开纯净模式"){
-                    this.style.backgroundPosition="0 -311px";
+            lyricMask.onclick=onlyBtn.onclick=function () {
+                if(onlyBtn.title=="打开纯净模式"){
+                    onlyBtn.style.backgroundPosition="0 -311px";
                     playStyle.normal.style.display="none";
                     playStyle.only.style.display="block";
-                    this.title="关闭纯净模式";
+                    lyricMask.style.display="block";
+                    onlyBtn.title="关闭纯净模式";
                 }else{
-                    this.style.backgroundPosition="0 -282px";
-                    playStyle.normal.style.display="block";
+                    onlyBtn.style.backgroundPosition="0 -282px";
                     playStyle.only.style.display="none";
-                    this.title="打开纯净模式"
+                    lyricMask.style.display="none";
+                    playStyle.normal.style.display="block";
+                    onlyBtn.title="打开纯净模式"
                 }
             };
 
@@ -436,11 +439,14 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 onlyLyric =opt.onlyLyric,  //纯净模式 歌词盒子
                 onlyBtn =opt.onlyBtn,
                 oP =null,
-                lineHeight=34;
+                lineHeight,
+                sTop;
             if(onlyBtn.title=="打开纯净模式"){
                 oP=lyricScroll.querySelectorAll("p");
+                lineHeight=34;
             }else{
                 oP=onlyLyric.querySelectorAll("p");
+                lineHeight=58;
             }
             for(var i=0;i<len;i++){
                 var audioCurrentTime=audio.currentTime;
@@ -452,6 +458,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                         item.classList.remove("on");
                     });
                     oP[i]&&oP[i].classList.add("on");
+                    sTop =i*lineHeight<len*lineHeight?i*lineHeight:len*lineHeight;
                     lyricScroll.style.top= -i*lineHeight+"px";
                     onlyLyric.style.top= -i*lineHeight+"px";
                 }

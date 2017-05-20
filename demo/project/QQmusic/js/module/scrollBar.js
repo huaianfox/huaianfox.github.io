@@ -22,7 +22,8 @@ define(function () {
             if(songlist.length){
                 this.renderUI();
             }else{
-                this.scrollBar.style.height="0px";
+                this.scrollBar.style.height="0";
+                this.content.style.top="0";
             }
         },
         renderUI:function () {

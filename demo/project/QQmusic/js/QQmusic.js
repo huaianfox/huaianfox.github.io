@@ -34,6 +34,7 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
         player_normal =$("#player_normal"), //正常模式
         player_only =$("#player_only"), //纯净模式
         only_style_lyric =$("#only_style_lyric"), //纯净模式 歌词盒子
+        lyric_mask =$("#lyric_mask"), //纯净模式 歌词盒子
 
         player_songs =$("#player_edit_list"), //歌曲管理模板
         song_list_checkbox_all =$(".song_list_checkbox"), //总checkbox
@@ -61,7 +62,6 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
         voice_progress_current=$("#voice_progress_current"),//当前音量控制点
 
         song_list_number =$(".song_list_number"),//当前音乐跳动
-
         player_default={
             ready:false,//是否准备就绪,立即播放
             songList:null,//歌曲数组
@@ -94,7 +94,8 @@ requirejs(["store","libs/jsonp","module/createHtml","module/player","module/dial
             },
             playStyle:{
                 normal:player_normal,
-                only:player_only
+                only:player_only,
+                mask:lyric_mask
             },
             editPannel:player_songs,//编辑面板
             bg:j_bgImg
