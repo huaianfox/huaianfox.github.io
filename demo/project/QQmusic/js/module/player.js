@@ -71,6 +71,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 simSongInfo=opt.simSongInfo,
                 songInfo=opt.songInfo;
             // this.isScroll=true;
+            this.runTimer&&clearInterval(this.runTimer);
             audio.src=songList[index].src;
             playBtn.style.backgroundPosition="0 -100px";
             opt.bg.style.backgroundImage="url("+songList[index].img+")";
@@ -510,13 +511,21 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             s =s>9?s:"0"+s;
             str = m+":"+ s;
             return str;
+        },
+        destroy:function () {
+            this.runTimer&&clearInterval(this.runTimer);
         }
     };
+    var  player=null;
 
-    Player.init=function (option) {
-        new Player(option);
-    };
+    function init(option){
+        if(player){
+            player.destroy();
+            player=null;
+        }
+        player =new Player(option);
+    }
     return{
-        player:Player.init
+        player:init
     }
 });
