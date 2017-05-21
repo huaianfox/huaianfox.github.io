@@ -35,16 +35,14 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             },
             bg:null
         };
-        this.option=option;
         this.loopType=0;//播放模式 0：列表循环 1：顺序 2：随机 3：单曲
         this.runTimer=null;
         this.isControlSpeed=true;
-        this._start();
     }
     Player.prototype ={
         constructor:Player,
-        _start:function () {
-            var opt=this.config = Object.assign(this.config,this.option),
+        _start:function (option) {
+            var opt=this.config = Object.assign(this.config,option),
                 chtml=CH.CreateHtml;
             Store.set("musicList",opt.songList);
             chtml({
@@ -516,14 +514,13 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             this.runTimer&&clearInterval(this.runTimer);
         }
     };
-    var  player=null;
+    var  player=new Player();
 
     function init(option){
         if(player){
-            player.destroy();
-            player=null;
+            player._start(option);
         }
-        player =new Player(option);
+
     }
     return{
         player:init
