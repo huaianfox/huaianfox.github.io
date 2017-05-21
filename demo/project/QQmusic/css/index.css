@@ -460,16 +460,18 @@ html,body{
     /*
      纯净模式
     */
-.mod_lyric_mask{}
+
 
 .player_style_only,.mod_lyric_mask{
     position: absolute;
     top: 0;
     left: 0;
+    bottom:0;
+    right:0;
     width: 100%;
     height: 100%;
     display: none;
-    overflow: hidden;
+    overflow:hidden;
 }
 .mod_only_lyric {
     position: absolute;

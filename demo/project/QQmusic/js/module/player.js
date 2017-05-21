@@ -81,7 +81,6 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
             songInfo.name.innerHTML ="歌曲名 ： "+songList[index].song;
             songInfo.singer.innerHTML ="歌手名 ： "+songList[index].singer;
             songInfo.album.innerHTML ="专辑名 ： "+songList[index].album;
-            console.log(index);
             this.syncsUI(index);
             this.getLyric(index);
             this._goRuning(index);
@@ -122,6 +121,7 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
               showTime=opt.showTime;
             this.runTimer&&clearInterval(this.runTimer);
             this.runTimer =setInterval(function () {
+                console.log(_this.runTimer);
                 currentTime =audio.currentTime;
                 duration =audio.duration;
                 if(!duration){
@@ -252,8 +252,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 }else{
                     onlyBtn.style.backgroundPosition="0 -282px";
                     playStyle.only.style.display="none";
-                    lyricMask.style.display="none";
                     playStyle.normal.style.display="block";
+                    lyricMask.style.display="none";
                     onlyBtn.title="打开纯净模式"
                 }
             };
@@ -332,12 +332,8 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                         break;
                 }
             };
-            
-            
-            
             //工具函数
             //获取距左侧距离
-            
             function getPos(element,drection) {
                 var current =element["offset"+drection],
                     parent =element.offsetParent;
@@ -434,13 +430,14 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 songList=opt.songList,
                 lyricArray=songList[index].lyricArray,
                 lyricScroll =simSongInfo.lyricScroll,//正常模式 歌词盒子
-                len = lyricArray.length,
                 audio = opt.audio,
                 onlyLyric =opt.onlyLyric,  //纯净模式 歌词盒子
                 onlyBtn =opt.onlyBtn,
                 oP =null,
                 lineHeight,
-                sTop;
+                len,
+                sTop,
+                currentIndex=0;
             if(onlyBtn.title=="打开纯净模式"){
                 oP=lyricScroll.querySelectorAll("p");
                 lineHeight=34;
@@ -448,21 +445,29 @@ define(["store","module/createHtml","libs/jsonp"],function (Store,CH,AJ) {
                 oP=onlyLyric.querySelectorAll("p");
                 lineHeight=58;
             }
-            for(var i=0;i<len;i++){
+            len =oP.length;
+            Array.prototype.forEach.call(oP,function (item) {
+                item.classList.remove("on");
+            });
+            for(var i=0;i<len-1;i++){
                 var audioCurrentTime=audio.currentTime;
                 if(oP[i]){
                     var curT =oP[i].dataset.time;
                 }
-                if(audioCurrentTime>curT){
-                    Array.prototype.forEach.call(oP,function (item) {
-                        item.classList.remove("on");
-                    });
-                    oP[i]&&oP[i].classList.add("on");
-                    sTop =i*lineHeight<len*lineHeight?i*lineHeight:len*lineHeight;
-                    lyricScroll.style.top= -i*lineHeight+"px";
-                    onlyLyric.style.top= -i*lineHeight+"px";
+                if(oP[i+1]){
+                    var nextT =oP[i+1].dataset.time;
+                }
+                if(audioCurrentTime>curT && audioCurrentTime<nextT){
+                    currentIndex =i;
                 }
             }
+            if(oP[len-1]&&oP[len-1].dataset.time<=audioCurrentTime){
+                currentIndex =len-1;
+            }
+            oP[currentIndex]&&oP[currentIndex].classList.add("on");
+            sTop = currentIndex * lineHeight < len * lineHeight ? currentIndex * lineHeight : len * lineHeight;
+            lyricScroll.style.top= -currentIndex * lineHeight+"px";
+            onlyLyric.style.top= -currentIndex * lineHeight+"px";
 
         },
         syncsUI:function (index) { //处理 播放器外部样式 代码冗余 以后优化
